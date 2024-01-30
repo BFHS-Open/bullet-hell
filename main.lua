@@ -11,9 +11,9 @@ function love.load()
    love.window.setMode(1920, 1080)
 end
 
-function love.update()
-   player:update()
-   horde:update(player)
+function love.update(dt)
+   player:update(dt)
+   horde:update(dt)
 end
 
 function love.draw()

@@ -13,7 +13,7 @@ function player:update(dt)
    -- handle movement
    local dx, dy = 0, 0
    local adjustment = 1
-   -- goes through the key set and changes the movement accordingly based on whether keys are active
+   -- adds a movement vector in the direction of the key
    if love.keyboard.isDown("w") then
       dy = dy - 1
    end

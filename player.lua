@@ -31,7 +31,7 @@ function player:update(dt)
 	end
 
 	if dx ~= 0 and dy ~= 0 then
-		adjustment = 0.707106
+		adjustment = 0.707106781
 	end
 
 	--applies movement

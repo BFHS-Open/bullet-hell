@@ -3,7 +3,8 @@ local enemyFactory = require("enemy")
 
 function love.load()
 	player = playerFactory.new(300, 400)
-	horde = enemyFactory.new(0, 0)
+	enemy1 = enemyFactory.new(0, 0, "homing")
+	enemy2 = enemyFactory.new(100, 0, "homing")
 
 	love.graphics.setNewFont(12)
 	love.graphics.setColor(0, 0, 0)
@@ -14,7 +15,8 @@ end
 
 function love.update(dt)
 	player:update(dt)
-	horde:update(dt)
+	enemy1:update(dt)
+	enemy2:update(dt)
 end
 
 function love.draw()
@@ -22,6 +24,7 @@ function love.draw()
 	timeCurr = love.timer.getTime() - timeInit
 	score = timeCurr * 20
 	love.graphics.draw(player.image, player.x, player.y, 0, player.scale, player.scale)
-	love.graphics.draw(horde.image, horde.x, horde.y, 0, horde.scale, horde.scale)
+	love.graphics.draw(enemy1.image, enemy1.x, enemy1.y, 0, enemy1.scale, enemy1.scale)
+	love.graphics.draw(enemy2.image, enemy2.x, enemy2.y, 0, enemy2.scale, enemy2.scale)
 	love.graphics.print("score: " .. math.ceil(score), 10, 10)
 end

@@ -1,44 +1,61 @@
-player = {}
+local player = {}
+player.__index = player
 
-function player:new(x, y)
-   self.x = x
-   self.y = y
-   self.image = love.graphics.newImage("resources/player.png")
-   self.scale = 0.3
-   self.speed = 500
-   return player
+function player.new(x, y)
+	local p = setmetatable({}, player)
+
+	p.x = x
+	p.y = y
+	p.image = love.graphics.newImage("resources/player.png")
+	p.scale = 0.3
+	p.speed = 500
+
+	return p
 end
 
 function player:update(dt)
-   -- handle movement
-   local dx, dy = 0, 0
-   local adjustment = 1
-   -- adds a movement vector in the direction of the key
-   if love.keyboard.isDown("w") then
-      dy = dy - 1
-   end
-   if love.keyboard.isDown("s") then
-      dy = dy + 1
-   end
-   if love.keyboard.isDown("d") then
-      dx = dx + 1
-   end
-   if love.keyboard.isDown("a") then
-      dx = dx - 1
-   end
+	local dx, dy = 0, 0
+	local adjustment = 1
 
-   -- applies the vector normalization if both components are nonzero
-   if dx ~= 0 and dy ~= 0 then
-      adjustment = .707106
-   end
+	if love.keyboard.isDown("w") then
+		dy = dy - 1
+	end
+	if love.keyboard.isDown("s") then
+		dy = dy + 1
+	end
+	if love.keyboard.isDown("d") then
+		dx = dx + 1
+	end
+	if love.keyboard.isDown("a") then
+		dx = dx - 1
+	end
 
-   --applies movement
-   player.x = player.x + dx * dt * player.speed * adjustment
-   player.y = player.y + dy * dt * player.speed * adjustment
-   
-   -- handle screen border collisions
-   if player.x < 0 then player.x = 0 end
-   if player.x + player.image:getWidth() * player.scale > 1920 then player.x = 1920 - player.image:getWidth() * player.scale end
-   if player.y < 0 then player.y = 0 end
-   if player.y + player.image:getHeight() * player.scale > 1080 then player.y = 1080 - player.image:getHeight() * player.scale end
+	if dx ~= 0 and dy ~= 0 then
+		adjustment = 0.707106
+	end
+
+	--applies movement
+	self.x = self.x + dx * dt * self.speed * adjustment
+	self.y = self.y + dy * dt * self.speed * adjustment
+
+	local screenX, screenY, _ = love.window.getMode()
+
+	print(self.x)
+	print(self.y)
+
+	-- handle screen border collisions
+	if self.x < 0 then
+		self.x = 0
+	end
+	if self.x + self.image:getWidth() * self.scale > screenX then
+		self.x = screenX - self.image:getWidth() * self.scale
+	end
+	if self.y < 0 then
+		self.y = 0
+	end
+	if self.y + self.image:getHeight() * self.scale > screenY then
+		self.y = screenY - self.image:getHeight() * self.scale
+	end
 end
+
+return player

@@ -25,8 +25,6 @@ function math.normalize(x, y)
 end
 
 function enemy:homing()
-	print(self.y)
-	print(self.x)
 	local normx, normy = math.normalize((self.x - player.x), (self.y - player.y))
 
 	self.x = self.x - dt * normx * self.speed

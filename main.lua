@@ -3,7 +3,7 @@ local enemyFactory = require("enemy")
 
 function love.load()
 	player = playerFactory.new(300, 400)
-	enemy1 = enemyFactory.new(0, 0, "homing")
+	enemy1 = enemyFactory.new(400, 0, "wallProjectile")
 	enemy2 = enemyFactory.new(100, 0, "homing")
 
 	love.graphics.setNewFont(12)

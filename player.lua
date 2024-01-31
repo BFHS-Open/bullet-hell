@@ -40,9 +40,6 @@ function player:update(dt)
 
 	local screenX, screenY, _ = love.window.getMode()
 
-	print(self.x)
-	print(self.y)
-
 	-- handle screen border collisions
 	if self.x < 0 then
 		self.x = 0

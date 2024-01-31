@@ -5,23 +5,37 @@ function player:new(x, y)
    self.y = y
    self.image = love.graphics.newImage("resources/player.png")
    self.scale = 0.3
+   self.speed = 500
    return player
 end
 
-function player:update()
+function player:update(dt)
    -- handle movement
-   if love.keyboard.isDown("up") then
-      player.y = player.y - 10
+   local dx, dy = 0, 0
+   local adjustment = 1
+   -- adds a movement vector in the direction of the key
+   if love.keyboard.isDown("w") then
+      dy = dy - 1
    end
-   if love.keyboard.isDown("down") then
-      player.y = player.y + 10
+   if love.keyboard.isDown("s") then
+      dy = dy + 1
    end
-   if love.keyboard.isDown("left") then
-      player.x = player.x - 10
+   if love.keyboard.isDown("d") then
+      dx = dx + 1
    end
-   if love.keyboard.isDown("right") then
-      player.x = player.x + 10
+   if love.keyboard.isDown("a") then
+      dx = dx - 1
    end
+
+   -- applies the vector normalization if both components are nonzero
+   if dx ~= 0 and dy ~= 0 then
+      adjustment = .707106
+   end
+
+   --applies movement
+   player.x = player.x + dx * dt * player.speed * adjustment
+   player.y = player.y + dy * dt * player.speed * adjustment
+   
    -- handle screen border collisions
    if player.x < 0 then player.x = 0 end
    if player.x + player.image:getWidth() * player.scale > 1920 then player.x = 1920 - player.image:getWidth() * player.scale end

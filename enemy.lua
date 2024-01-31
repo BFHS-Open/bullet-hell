@@ -24,7 +24,7 @@ function math.normalize(x, y)
 	end
 end
 
-function enemy:homing()
+function enemy:homing(dt)
 	local normx, normy = math.normalize((self.x - player.x), (self.y - player.y))
 
 	self.x = self.x - dt * normx * self.speed
@@ -33,7 +33,7 @@ end
 
 function enemy:update(dt)
 	if self.type == "homing" then
-		self:homing()
+		self:homing(dt)
 	end
 end
 

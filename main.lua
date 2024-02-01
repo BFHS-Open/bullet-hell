@@ -3,7 +3,7 @@ local enemyFactory = require("enemy")
 
 function love.load()
 	player = playerFactory.new(300, 400)
-	enemy1 = enemyFactory.new(0, 0, "homing")
+	enemy1 = enemyFactory.new(400, 0, "wallProjectile")
 	enemy2 = enemyFactory.new(100, 0, "homing")
 
 	love.graphics.setNewFont(12)
@@ -17,6 +17,26 @@ function love.update(dt)
 	player:update(dt)
 	enemy1:update(dt)
 	enemy2:update(dt)
+end
+
+function randomPerimeterCord()
+	local screenX, screenY, _ = love.window.getMode()
+
+	local side = math.random(1, 4)
+	if side == 1 then
+		x = math.random(0, 700)
+		y = 0
+	elseif side == 2 then
+		x = math.random(0, 700)
+		y = 700
+	elseif side == 3 then
+		x = 0
+		y = math.random(0, 700)
+	else
+		x = 700
+		y = math.random(0, 700)
+	end
+	return x, y
 end
 
 function love.draw()

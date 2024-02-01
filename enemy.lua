@@ -10,6 +10,7 @@ function enemy.new(x, y, type)
 	e.scale = 0.1
 	e.speed = 200
 	e.type = type
+	e.timeInit = love.timer.getTime()
 
 	return e
 end
@@ -33,6 +34,11 @@ end
 
 function enemy:update(dt)
 	if self.type == "homing" then
+		if love.timer.getTime() - self.timeInit > 5 then
+			self.x = 0
+			self.y = 0
+			self.timeInit = love.timer.getTime()
+		end
 		self:homing(dt)
 	end
 end

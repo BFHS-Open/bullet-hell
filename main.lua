@@ -19,6 +19,26 @@ function love.update(dt)
 	enemy2:update(dt)
 end
 
+function randomPerimeterCord()
+	local screenX, screenY, _ = love.window.getMode()
+
+	local side = math.random(1, 4)
+	if side == 1 then
+		x = math.random(0, 700)
+		y = 0
+	elseif side == 2 then
+		x = math.random(0, 700)
+		y = 700
+	elseif side == 3 then
+		x = 0
+		y = math.random(0, 700)
+	else
+		x = 700
+		y = math.random(0, 700)
+	end
+	return x, y
+end
+
 function love.draw()
 	--score system. Initial Time is subtracted from the current time to get the elapsed time and generate a score
 	timeCurr = love.timer.getTime() - timeInit

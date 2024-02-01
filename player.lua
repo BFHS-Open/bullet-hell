@@ -7,10 +7,17 @@ function player.new(x, y)
 	p.x = x
 	p.y = y
 	p.image = love.graphics.newImage("resources/player.png")
-	p.scale = 0.3
+	p.scale = 0.1
 	p.speed = 500
-
+	p.radius = p.image:getWidth() * p.scale
+	p.xcenter = (p.x + p.image:getWidth() * p.scale * .5)
+	p.ycenter = (p.y + p.image:getHeight() * p.scale * .5)
 	return p
+end
+
+function player:updateCenter()
+	self.xcenter = (self.x + self.image:getWidth() * self.scale * .5)
+	self.ycenter = (self.y + self.image:getHeight() * self.scale * .5)
 end
 
 function player:update(dt)
@@ -37,6 +44,7 @@ function player:update(dt)
 	--applies movement
 	self.x = self.x + dx * dt * self.speed * adjustment
 	self.y = self.y + dy * dt * self.speed * adjustment
+	self:updateCenter()
 
 	local screenX, screenY, _ = love.window.getMode()
 

@@ -1,19 +1,20 @@
 local enemy = {}
 enemy.__index = enemy
 
-function enemy.new(x, y, class)
+function enemy.new(x, y, speed, class)
 	local e = setmetatable({}, enemy)
 
 	e.x = x
 	e.y = y
 	e.image = love.graphics.newImage("resources/enemy.png")
 	e.scale = 0.1
-	e.speed = 150
+	e.speed = speed
 	e.class = class
 	e.xcenter = (e.x + e.image:getWidth() * e.scale * .5)
 	e.ycenter = (e.y + e.image:getHeight() * e.scale * .5)
-	e.radius = e.image:getWidth() / 2
+	e.radius = e.image:getWidth() / 2 * e.scale
 	e.timeInit = love.timer.getTime()
+	e.alive = true
 	if e.class == "wallProjectile" then
 		e.angle = math.atan((player.y - e.y) / (player.x - e.x))
 	end
@@ -49,25 +50,25 @@ function enemy:updateCenter()
 end
 
 function enemy:collisionDetection()
-	if math.sqrt((self.xcenter - player.xcenter)^2 + (self.ycenter - player.ycenter)^2) <= (player.radius + e.radius) then
-		print("collision")
+	if math.sqrt((self.xcenter - player.xcenter)^2 + (self.ycenter - player.ycenter)^2) <= (player.radius + self.radius - 2) then
+		self.alive = false
 	end
 end
 
 function enemy:update(dt)
-	if self.class == "homing" then
-		self:homing(dt)
-		if love.timer.getTime() - self.timeInit > 5 then
-			self.x = 0
-			self.y = 0
-			self.timeInit = love.timer.getTime()
+	if self.alive == true then
+		if self.class == "wallProjectile" then
+			self:vectorMovement(dt, self.angle)
 		end
+		if self.class == "homing" then
+			self:homing(dt)
+			if love.timer.getTime() - self.timeInit > 7 then
+				self.alive = false
+			end
+		end
+		self:updateCenter()
+		self:collisionDetection()
 	end
-	if self.class == "wallProjectile" then
-		self:vectorMovement(dt, self.angle)
-	end
-	self:updateCenter()
-	self:collisionDetection()
 end
 
 return enemy

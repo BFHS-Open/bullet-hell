@@ -8,6 +8,7 @@ function enemy.new(x, y, class)
 	e.y = y
 	e.image = love.graphics.newImage("resources/enemy.png")
 	e.scale = 0.1
+	e.timeInit = love.timer.getTime()
 	e.speed = 150
 	e.class = class
 	e.xcenter = (e.x + e.image:getWidth() * e.scale * .5)
@@ -56,6 +57,11 @@ end
 
 function enemy:update(dt)
 	if self.class == "homing" then
+		if love.timer.getTime() - self.timeInit > 5 then
+			self.x = 0
+			self.y = 0
+			self.timeInit = love.timer.getTime()
+		end
 		self:homing(dt)
 		if love.timer.getTime() - self.timeInit > 5 then
 			self.x = 0

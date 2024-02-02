@@ -6,7 +6,7 @@ function enemy.new(x, y, class)
 
 	e.x = x
 	e.y = y
-	e.image = love.graphics.newImage("resources/enemy.png")
+	e.image = love.graphics.newImage("resources/enemy.jpg")
 	e.scale = 0.1
 	e.timeInit = love.timer.getTime()
 	e.speed = 150
@@ -50,7 +50,7 @@ function enemy:updateCenter()
 end
 
 function enemy:collisionDetection()
-	if math.sqrt((self.xcenter - player.xcenter)^2 + (self.ycenter - player.ycenter)^2) <= (player.radius + e.radius) then
+	if math.sqrt((self.xcenter - player.xcenter)^2 + (self.ycenter - player.ycenter)^2) <= (player.radius + self.radius) then
 		print("collision")
 	end
 end

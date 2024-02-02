@@ -6,7 +6,7 @@ function enemy.new(x, y, speed, class)
 
 	e.x = x
 	e.y = y
-	e.image = love.graphics.newImage("resources/enemy.jpg")
+	e.image = love.graphics.newImage("resources/enemy.png")
 	e.scale = 0.1
 	e.speed = speed
 	e.timeInit = love.timer.getTime()

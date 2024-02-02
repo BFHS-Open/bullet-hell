@@ -5,7 +5,6 @@ function love.load()
 	player = playerFactory.new(300, 400)
 	enemyTable = {}
 	love.graphics.setNewFont(12)
-	love.graphics.setColor(0, 0, 0)
 	love.graphics.setBackgroundColor(255, 255, 255)
 	love.window.setMode(700, 700)
 	timeInit = love.timer.getTime()
@@ -17,14 +16,16 @@ function love.update(dt)
 	cooldown = math.max(cooldown - dt,0)
 
 	if cooldown == 0 then
-		cooldown = 1
+		cooldown = .5
 		counter = counter + 1
 		local enemyx, enemyy = randomPerimeterCord()
-		randClass = math.random(1,2)
-		if randClass == 1 then
+		randClass = math.random()
+		if randClass <= .1 then
 			enemyTable[counter] = enemyFactory.new(enemyx, enemyy, 150, "homing")
-		elseif randClass == 2 then
+		elseif randClass < .6 and randClass > .1 then
 			enemyTable[counter] = enemyFactory.new(enemyx, enemyy, 300, "wallProjectile")
+		elseif randClass >= .6 then
+			enemyTable[counter] = enemyFactory.new(enemyx, enemyy, 300, "axisAligned")
 		end
 	end
 	player:update(dt)
@@ -41,15 +42,15 @@ function randomPerimeterCord()
 	local side = math.random(1, 4)
 	if side == 1 then
 		x = math.random(0, 700)
-		y = 0
+		y = 0 - (enemyTable[1].image:getWidth() * enemyTable[1].scale * .5)
 	elseif side == 2 then
 		x = math.random(0, 700)
-		y = 700
+		y = screenY
 	elseif side == 3 then
-		x = 0
+		x = 0 - (enemyTable[1].image:getWidth() * enemyTable[1].scale)
 		y = math.random(0, 700)
 	else
-		x = 700
+		x = screenX
 		y = math.random(0, 700)
 	end
 	return x, y
@@ -65,5 +66,5 @@ function love.draw()
 			love.graphics.draw(enemyTable[i].image, enemyTable[i].x, enemyTable[i].y, enemyTable[i].scale, enemyTable[i].scale)
 		end
 	end
-	love.graphics.print("score: " .. math.ceil(score), 10, 10)
+	love.graphics.printf({{0, 0, 0}, ("score: " .. math.ceil(score))}, 10, 10, 99)
 end

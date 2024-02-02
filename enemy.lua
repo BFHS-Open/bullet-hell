@@ -55,16 +55,42 @@ function enemy:collisionDetection()
 	end
 end
 
+function enemy:axisAlignment(dt)
+	local screenX, screenY, _ = love.window.getMode()
+	if self.axis == nil then
+		if self.x == screenX then
+			self.axis = "left"
+		elseif self.x <= 0 then
+			self.axis = "right"
+		elseif self.y == screenY then
+			self.axis = "up"
+		elseif self.y <= 0 then
+			self.axis = "down"
+		end
+	else
+		if self.axis == "left" then
+			self.x = self.x - dt * self.speed
+		elseif self.axis == "right" then
+			self.x = self.x + dt * self.speed
+		elseif self.axis == "up" then
+			self.y = self.y - dt * self.speed
+		elseif self.axis == "down" then
+			self.y = self.y + dt * self.speed
+		end
+	end
+end
+
 function enemy:update(dt)
 	if self.alive == true then
 		if self.class == "wallProjectile" then
 			self:vectorMovement(dt, self.angle)
-		end
-		if self.class == "homing" then
+		elseif self.class == "homing" then
 			self:homing(dt)
 			if love.timer.getTime() - self.timeInit > 7 then
 				self.alive = false
 			end
+		elseif self.class == "axisAligned" then
+			self:axisAlignment(dt)
 		end
 		self:updateCenter()
 		self:collisionDetection()

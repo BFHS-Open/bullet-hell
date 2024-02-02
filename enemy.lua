@@ -6,9 +6,10 @@ function enemy.new(x, y, speed, class)
 
 	e.x = x
 	e.y = y
-	e.image = love.graphics.newImage("resources/enemy.png")
+	e.image = love.graphics.newImage("resources/enemy.jpg")
 	e.scale = 0.1
 	e.speed = speed
+	e.timeInit = love.timer.getTime()
 	e.class = class
 	e.xcenter = (e.x + e.image:getWidth() * e.scale * .5)
 	e.ycenter = (e.y + e.image:getHeight() * e.scale * .5)
@@ -76,7 +77,7 @@ function enemy:axisAlignment(dt)
 			self.y = self.y - dt * self.speed
 		elseif self.axis == "down" then
 			self.y = self.y + dt * self.speed
-		end
+    end
 	end
 end
 

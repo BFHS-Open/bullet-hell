@@ -1,20 +1,21 @@
 local enemy = {}
 enemy.__index = enemy
 
-function enemy.new(x, y, class)
+function enemy.new(x, y, speed, class)
 	local e = setmetatable({}, enemy)
 
 	e.x = x
 	e.y = y
 	e.image = love.graphics.newImage("resources/enemy.jpg")
 	e.scale = 0.1
+	e.speed = speed
 	e.timeInit = love.timer.getTime()
-	e.speed = 150
 	e.class = class
 	e.xcenter = (e.x + e.image:getWidth() * e.scale * .5)
 	e.ycenter = (e.y + e.image:getHeight() * e.scale * .5)
-	e.radius = e.image:getWidth() / 2
+	e.radius = e.image:getWidth() / 2 * e.scale
 	e.timeInit = love.timer.getTime()
+	e.alive = true
 	if e.class == "wallProjectile" then
 		e.angle = math.atan((player.y - e.y) / (player.x - e.x))
 	end
@@ -50,30 +51,51 @@ function enemy:updateCenter()
 end
 
 function enemy:collisionDetection()
-	if math.sqrt((self.xcenter - player.xcenter)^2 + (self.ycenter - player.ycenter)^2) <= (player.radius + self.radius) then
-		print("collision")
+	if math.sqrt((self.xcenter - player.xcenter)^2 + (self.ycenter - player.ycenter)^2) <= (player.radius + self.radius - 2) then
+		self.alive = false
+	end
+end
+
+function enemy:axisAlignment(dt)
+	local screenX, screenY, _ = love.window.getMode()
+	if self.axis == nil then
+		if self.x == screenX then
+			self.axis = "left"
+		elseif self.x <= 0 then
+			self.axis = "right"
+		elseif self.y == screenY then
+			self.axis = "up"
+		elseif self.y <= 0 then
+			self.axis = "down"
+		end
+	else
+		if self.axis == "left" then
+			self.x = self.x - dt * self.speed
+		elseif self.axis == "right" then
+			self.x = self.x + dt * self.speed
+		elseif self.axis == "up" then
+			self.y = self.y - dt * self.speed
+		elseif self.axis == "down" then
+			self.y = self.y + dt * self.speed
+    end
 	end
 end
 
 function enemy:update(dt)
-	if self.class == "homing" then
-		if love.timer.getTime() - self.timeInit > 5 then
-			self.x = 0
-			self.y = 0
-			self.timeInit = love.timer.getTime()
+	if self.alive == true then
+		if self.class == "wallProjectile" then
+			self:vectorMovement(dt, self.angle)
+		elseif self.class == "homing" then
+			self:homing(dt)
+			if love.timer.getTime() - self.timeInit > 7 then
+				self.alive = false
+			end
+		elseif self.class == "axisAligned" then
+			self:axisAlignment(dt)
 		end
-		self:homing(dt)
-		if love.timer.getTime() - self.timeInit > 5 then
-			self.x = 0
-			self.y = 0
-			self.timeInit = love.timer.getTime()
-		end
+		self:updateCenter()
+		self:collisionDetection()
 	end
-	if self.class == "wallProjectile" then
-		self:vectorMovement(dt, self.angle)
-	end
-	self:updateCenter()
-	self:collisionDetection()
 end
 
 return enemy

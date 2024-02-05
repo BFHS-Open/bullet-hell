@@ -16,10 +16,10 @@ function love.update(dt)
 	cooldown = math.max(cooldown - dt,0)
 
 	if cooldown == 0 then
-		cooldown = 20
+		cooldown = 1
 		counter = counter + 1
 		local enemyx, enemyy = randomPerimeterCord()
-		randClass = math.random(1,2)
+		randClass = math.random()
 		if randClass <= .1 then
 			enemyTable[counter] = enemyFactory.new(enemyx, enemyy, 200, .1, "homing")
 		elseif randClass <= .6 and randClass > .1 then

@@ -1,9 +1,9 @@
 local playerFactory = require("player")
-local enemyFactory = require("enemy")
+local spawnerFactory = require("spawner")
 
 function love.load()
 	player = playerFactory.new(300, 400)
-	enemyTable = {}
+	spawnerTable = {}
 	love.graphics.setNewFont(12)
 	love.graphics.setBackgroundColor(255, 255, 255)
 	love.window.setMode(700, 700)
@@ -19,22 +19,22 @@ function love.update(dt)
 		cooldown = 20
 		counter = counter + 1
 		local enemyx, enemyy = randomPerimeterCord()
-		randClass = math.random(1,2)
+		randClass = math.random()
 		if randClass <= .1 then
-			enemyTable[counter] = enemyFactory.new(enemyx, enemyy, 200, .1, "homing")
-		elseif randClass <= .6 and randClass > .1 then
-			enemyTable[counter] = enemyFactory.new(enemyx, enemyy, 300, .1, "wallProjectile")
+			spawnerTable[counter] = spawnerFactory.new(enemyx, enemyy, 200, .1, "homing")
+		elseif randClass <= .4 and randClass > .1 then
+			spawnerTable[counter] = spawnerFactory.new(enemyx, enemyy, 300, .1, "wallProjectile")
 		elseif randClass > .6 and randClass <= .9 then
-			enemyTable[counter] = enemyFactory.new(enemyx, enemyy, 300, .1, "axisAligned")
+			spawnerTable[counter] = spawnerFactory.new(enemyx, enemyy, 300, .1, "axisAligned")
 		elseif randClass > .9 then
-			enemyTable[counter] = enemyFactory.new(player.x, player.y, 200, .1, "telegraphed")
+			spawnerTable[counter] = spawnerFactory.new(player.x, player.y, 200, .1, "telegraphed")
 		end
 	end
 	player:update(dt)
 	for i=1, counter do
 		-- the alive/dead system results in a memory leak as dead enemies are never removed from memory
-		if enemyTable[i].alive == true then
-			enemyTable[i]:update(dt)
+		if spawnerTable[i].alive == true then
+			spawnerTable[i]:update(dt)
 		end
 	end
 end
@@ -44,12 +44,12 @@ function randomPerimeterCord()
 	local side = math.random(1, 4)
 	if side == 1 then
 		x = math.random(0, 700)
-		y = 0 - (enemyTable[1].image:getWidth() * enemyTable[1].scale * .5)
+		y = 0 - (spawnerTable[1].image:getWidth() * spawnerTable[1].scale * .5)
 	elseif side == 2 then
 		x = math.random(0, 700)
 		y = screenY
 	elseif side == 3 then
-		x = 0 - (enemyTable[1].image:getWidth() * enemyTable[1].scale)
+		x = 0 - (spawnerTable[1].image:getWidth() * spawnerTable[1].scale)
 		y = math.random(0, 700)
 	else
 		x = screenX
@@ -64,8 +64,8 @@ function love.draw()
 	score = timeCurr * 20
 	love.graphics.draw(player.image, player.x, player.y, 0, player.scale, player.scale)
 	for i=1, counter do
-		if enemyTable[i].alive == true then
-			love.graphics.draw(enemyTable[i].image, enemyTable[i].x, enemyTable[i].y, enemyTable[i].scale, enemyTable[i].scale)
+		if spawnerTable[i].alive == true then
+			love.graphics.draw(spawnerTable[i].image, spawnerTable[i].x, spawnerTable[i].y, spawnerTable[i].scale, spawnerTable[i].scale)
 		end
 	end
 	love.graphics.printf({{0, 0, 0}, ("score: " .. math.ceil(score))}, 10, 10, 99)

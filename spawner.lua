@@ -1,41 +1,41 @@
-local enemy = {}
-enemy.__index = enemy
+local spawner = {}
+spawner.__index = spawner
 
-function enemy.new(x, y, speed, scale, class)
-	local e = setmetatable({}, enemy)
+function spawner.new(x, y, speed, scale, class)
+	local e = setmetatable({}, spawner)
 
-	e.x = x
-	e.y = y
-	e.scale = scale
-	e.speed = speed
-	e.class = class
-	if e.class == "telegraphed" then 
-		e.image = love.graphics.newImage("resources/crosshairBLK.png")
-		e.blinkCooldown = 5
-		e.imgType = 0
+	s.x = x
+	s.y = y
+	s.scale = scale
+	s.speed = speed
+	s.class = class
+	if s.class == "telegraphed" then 
+		s.image = lovs.graphics.newImage("resources/crosshairBLK.png")
+		s.blinkCooldown = 5
+		s.imgType = 0
 	else
-		e.image = love.graphics.newImage("resources/enemy.png")
+		s.image = love.graphics.newImage("resources/enemy.png")
 	end
-	e.xcenter = (e.x + e.image:getWidth() * e.scale * .5)
-	e.ycenter = (e.y + e.image:getHeight() * e.scale * .5)
-	e.radius = e.image:getWidth() / 2 * e.scale
-	e.timeInit = love.timer.getTime()
-	e.alive = true
-	if e.class == "wallProjectile" then
-		e.angle = math.atan((player.y - e.y) / (player.x - e.x))
-	elseif e.class == "axisAligned" then
-		local screenX, screenY, _ = love.window.getMode()
-		if e.x == screenX then
-			e.axis = "left"
-		elseif e.x <= 0 then
-			e.axis = "right"
-		elseif e.y == screenY then
-			e.axis = "up"
-		elseif e.y <= 0 then
-			e.axis = "down"
+	s.xcenter = (s.x + s.image:getWidth() * s.scale * .5)
+	s.ycenter = (s.y + s.image:getHeight() * s.scale * .5)
+	s.radius = s.image:getWidth() / 2 * s.scale
+	s.timeInit = lovs.timer.getTime()
+	s.alive = true
+	if s.class == "wallProjectile" then
+		s.angle = math.atan((player.y - s.y) / (player.x - s.x))
+	elseif s.class == "axisAligned" then
+		local screenX, screenY, _ = lovs.window.getMode()
+		if s.x == screenX then
+			s.axis = "left"
+		elseif s.x <= 0 then
+			s.axis = "right"
+		elseif s.y == screenY then
+			s.axis = "up"
+		elseif s.y <= 0 then
+			s.axis = "down"
 		end
 	end
-	return e
+	return s
 end
 
 function math.normalize(x, y)
@@ -48,7 +48,7 @@ function math.normalize(x, y)
 	end
 end
 
-function enemy:homing(dt)
+function spawner:homing(dt)
 	if self:distanceFromPlayer() >= 2 then
 		local normx, normy = math.normalize((self.xcenter - player.xcenter), (self.ycenter - player.ycenter))
 
@@ -57,28 +57,28 @@ function enemy:homing(dt)
 	end
 end
 
-function enemy:vectorMovement(dt, angle)
+function spawner:vectorMovement(dt, angle)
 	self.x = self.x - dt * self.speed * math.cos(angle)
 	self.y = self.y - dt * self.speed * math.sin(angle)
 end
 
-function enemy:updateCenter()
+function spawner:updateCenter()
 	self.xcenter = (self.x + self.image:getWidth() * self.scale * .5)
 	self.ycenter = (self.y + self.image:getHeight() * self.scale * .5)
 end
 
-function enemy:distanceFromPlayer()
+function spawner:distanceFromPlayer()
 	return math.sqrt((self.xcenter - player.xcenter)^2 + (self.ycenter - player.ycenter)^2)
 end
 
-function enemy:collisionDetection()
+function spawner:collisionDetection()
 	if self:distanceFromPlayer() <= (player.radius + self.radius - 2) then
 		return false
 	end
 	return true
 end
 
-function enemy:axisAlignment(dt)
+function spawner:axisAlignment(dt)
 	if self.axis == "left" then
 		self.x = self.x - dt * self.speed
 	elseif self.axis == "right" then
@@ -90,7 +90,7 @@ function enemy:axisAlignment(dt)
 	end
 end
 
-function enemy:update(dt)
+function spawner:update(dt)
 	elapsedTime = love.timer.getTime() - self.timeInit
 	if self.alive == true then
 		if self.class == "wallProjectile" then
@@ -132,4 +132,4 @@ function enemy:update(dt)
 	end
 end
 
-return enemy
+return spawner

@@ -2,7 +2,7 @@ local spawner = {}
 spawner.__index = spawner
 
 function spawner.new(x, y, speed, scale, class)
-	local e = setmetatable({}, spawner)
+	local s = setmetatable({}, spawner)
 
 	s.x = x
 	s.y = y

@@ -8,7 +8,7 @@ function player.new(x, y)
 	p.y = y
 	p.image = love.graphics.newImage("resources/player.png")
 	p.scale = 0.1
-	p.speed = 500
+	p.speed = 350
 	p.radius = p.image:getWidth() / 2 * p.scale
 	p.xcenter = (p.x + p.image:getWidth() * p.scale * .5)
 	p.ycenter = (p.y + p.image:getHeight() * p.scale * .5)

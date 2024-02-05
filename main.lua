@@ -16,16 +16,18 @@ function love.update(dt)
 	cooldown = math.max(cooldown - dt,0)
 
 	if cooldown == 0 then
-		cooldown = .5
+		cooldown = 20
 		counter = counter + 1
 		local enemyx, enemyy = randomPerimeterCord()
-		randClass = math.random()
+		randClass = math.random(1,2)
 		if randClass <= .1 then
-			enemyTable[counter] = enemyFactory.new(enemyx, enemyy, 150, "homing")
-		elseif randClass < .6 and randClass > .1 then
-			enemyTable[counter] = enemyFactory.new(enemyx, enemyy, 300, "wallProjectile")
-		elseif randClass >= .6 then
-			enemyTable[counter] = enemyFactory.new(enemyx, enemyy, 300, "axisAligned")
+			enemyTable[counter] = enemyFactory.new(enemyx, enemyy, 200, .1, "homing")
+		elseif randClass <= .6 and randClass > .1 then
+			enemyTable[counter] = enemyFactory.new(enemyx, enemyy, 300, .1, "wallProjectile")
+		elseif randClass > .6 and randClass <= .9 then
+			enemyTable[counter] = enemyFactory.new(enemyx, enemyy, 300, .1, "axisAligned")
+		elseif randClass > .9 then
+			enemyTable[counter] = enemyFactory.new(player.x, player.y, 200, .1, "telegraphed")
 		end
 	end
 	player:update(dt)

@@ -73,9 +73,9 @@ end
 
 function enemy:collisionDetection()
 	if self:distanceFromPlayer() <= (player.radius + self.radius - 2) then
-		return false
+		return true
 	end
-	return true
+	return false
 end
 
 function enemy:axisAlignment(dt)
@@ -114,7 +114,7 @@ function enemy:update(dt)
 				end
 			end
 			if elapsedTime > 7 then
-				if self:collisionDetection() == false then
+				if self:collisionDetection() == true then
 					print("killed player")
 				end
 				self.alive = false
@@ -123,7 +123,7 @@ function enemy:update(dt)
 			self:axisAlignment(dt)
 		end
 		if self.class ~= "telegraphed" then
-			self.alive = self:collisionDetection()
+			self.alive = not self:collisionDetection()
 		end
 		if elapsedTime > 15 then
 			self.alive = false

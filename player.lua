@@ -12,6 +12,7 @@ function player.new(x, y)
 	p.radius = p.image:getWidth() / 2 * p.scale
 	p.xcenter = (p.x + p.image:getWidth() * p.scale * .5)
 	p.ycenter = (p.y + p.image:getHeight() * p.scale * .5)
+	p.alive = true
 	return p
 end
 

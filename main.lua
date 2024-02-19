@@ -13,6 +13,10 @@ function love.load()
 end
 
 function love.update(dt)
+	if player.alive == false then
+		love.event.quit(0)
+	end
+	
 	cooldown = math.max(cooldown - dt,0)
 
 	if cooldown == 0 then

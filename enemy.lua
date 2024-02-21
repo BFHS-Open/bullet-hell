@@ -91,22 +91,15 @@ function enemy:axisAlignment(dt)
 end
 
 function enemy:update(dt)
+	love.graphics.setBackgroundColor(152, 212, 121)
 	elapsedTime = love.timer.getTime() - self.timeInit
 	if self.alive == true then
 		if self.class == "wallProjectile" then
 			self:vectorMovement(dt, self.angle)
-			if self:collisionDetection() == true then
-				print("killed player")
-				player.alive = false
-			end
 		elseif self.class == "homing" then
 			self:homing(dt)
 			if elapsedTime > 7 then
 				self.alive = false
-			end
-			if self:collisionDetection() == true then
-				print("killed player")
-				player.alive = false
 			end
 		elseif self.class == "telegraphed" then
 			self:homing(dt)
@@ -122,23 +115,21 @@ function enemy:update(dt)
 				end
 			end
 			if elapsedTime > 7 then
-				if self:collisionDetection() == true then
-					print("killed player")
+				if self:collisionDetection() then
 					player.alive = false
 				end
 				self.alive = false
 			end
 		elseif self.class == "axisAligned" then
 			self:axisAlignment(dt)
-			if self:collisionDetection() == true then
-				print("killed player")
-				player.alive = false
-			end
 		end
 		if self.class ~= "telegraphed" then
 			self.alive = not self:collisionDetection()
+			if self.alive == false then
+				player.alive = false
+			end
 		end
-		if elapsedTime > 15 then
+		if elapsedTime > 15 and self.class ~= "stationary" then
 			self.alive = false
 		end
 		self:updateCenter()

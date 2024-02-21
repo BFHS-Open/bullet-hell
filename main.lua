@@ -2,28 +2,34 @@ local playerFactory = require("player")
 local enemyFactory = require("enemy")
 
 function love.load()
-	player = playerFactory.new(300, 400)
+	player = playerFactory.new(380, 380)
 	enemyTable = {}
 	love.graphics.setNewFont(12)
 	love.graphics.setBackgroundColor(255, 255, 255)
 	love.window.setMode(700, 700)
 	timeInit = love.timer.getTime()
 	counter = 0
-	cooldown = 0
+	cooldown = 1
+	for i = 0, 5 do
+		counter = counter + 1
+		xstationary = love.math.random(0,700)
+		ystationary = love.math.random(0,700)
+		while distanceFrom(xstationary, ystationary, 380, 380) < (player.scale * (player.image:getWidth() / 2) + 25) do
+			xstationary = math.random(0,700)
+			ystationary = math.random(0,700)
+		end
+		enemyTable[counter] = enemyFactory.new(xstationary, ystationary, 0, .1, "stationary")
+	end
 end
 
 function love.update(dt)
-	if player.alive == false then
-		love.event.quit(0)
-	end
-	
 	cooldown = math.max(cooldown - dt,0)
 
 	if cooldown == 0 then
 		cooldown = 1
 		counter = counter + 1
 		local enemyx, enemyy = randomPerimeterCord()
-		randClass = math.random()
+		randClass = love.math.random()
 		if randClass <= .1 then
 			enemyTable[counter] = enemyFactory.new(enemyx, enemyy, 200, .1, "homing")
 		elseif randClass <= .6 and randClass > .1 then
@@ -31,7 +37,7 @@ function love.update(dt)
 		elseif randClass > .6 and randClass <= .9 then
 			enemyTable[counter] = enemyFactory.new(enemyx, enemyy, 300, .1, "axisAligned")
 		elseif randClass > .9 then
-			enemyTable[counter] = enemyFactory.new(player.x, player.y, 200, .1, "telegraphed")
+			enemyTable[counter] = enemyFactory.new(player.x, player.y, 250, .15, "telegraphed")
 		end
 	end
 	player:update(dt)
@@ -41,6 +47,13 @@ function love.update(dt)
 			enemyTable[i]:update(dt)
 		end
 	end
+	if player.alive == false then
+		love.event.quit(0)
+	end
+end
+
+function distanceFrom(x1, y1, x2, y2)
+	return math.sqrt((x1 - x2)^2 + (y1 - y2)^2)
 end
 
 function randomPerimeterCord()

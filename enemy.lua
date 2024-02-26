@@ -6,7 +6,7 @@ enemy.__index = enemy
 
 local sprites = {
 	homing = Sprite.new("/resources/homing.png", Point2d:rect(10, 10)),
-	ramming = Sprite.new("/resources/ramming.png", Point2d:rect(10, 10))
+	ramming = Sprite.new("/resources/ramming.png", Point2d:rect(10, 10)),
 }
 
 function enemy.new(type, data)

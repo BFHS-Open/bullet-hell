@@ -34,7 +34,7 @@ function Point2d.__mul(a, b)
 	if type(a) == "number" then
 		a, b = b, a
 	end
-	return Point2d:rect(a.x * b,a.y * b)
+	return Point2d:rect(a.x * b, a.y * b)
 end
 
 function Point2d.__div(a, b)

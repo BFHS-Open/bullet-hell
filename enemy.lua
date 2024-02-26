@@ -38,7 +38,6 @@ function enemy:update(dt)
     updateRamming(self, dt)
   end
   
-  print("a" .. self.type)
   if self.position:distanceTo(self.target.position) < self.killDistance then
     self.target.alive = false
   end

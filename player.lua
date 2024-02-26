@@ -1,17 +1,22 @@
 local Point2d = require("point2d")
+local Sprite = require("sprite")
+local config = require("config")
+local utils = require("utils")
 
 local player = {}
 player.__index = player
+
+local sprite = Sprite.new("/resources/player.png", Point2d:rect(10, 10))
 
 function player.new(position)
 	local p = setmetatable({}, player)
 
 	p.position = position
 
-	p.image = love.graphics.newImage("resources/player.png")
+	p.sprite = sprite
 	p.scale = 0.1
 
-	p.speed = 350
+	p.speed = 40
 
 	p.alive = true
 
@@ -19,10 +24,7 @@ function player.new(position)
 end
 
 function player:draw()
-	local imageX = self.position.x + self.image:getWidth() * self.scale * 0.5
-	local imageY = self.position.y + self.image:getHeight() * self.scale * 0.5
-
-	love.graphics.draw(self.image, imageX, imageY, self.scale, self.scale)
+	self.sprite:draw(self.position)
 end
 
 local function handleInput(self, dt)
@@ -48,21 +50,9 @@ end
 function player:update(dt)
 	handleInput(self, dt)
 
-	local screenX, screenY, _ = love.window.getMode()
-
 	-- handle screen border collisions
-	if self.position.x < 0 then
-		self.position.x = 0
-	end
-	if self.position.x + self.image:getWidth() * self.scale > screenX then
-		self.position.x = screenX - self.image:getWidth() * self.scale
-	end
-	if self.position.y < 0 then
-		self.position.y = 0
-	end
-	if self.position.y + self.image:getHeight() * self.scale > screenY then
-		self.position.y = screenY - self.image:getHeight() * self.scale
-	end
+	self.position.x = utils.clamp(self.position.x, 0, config.dims.x)
+	self.position.y = utils.clamp(self.position.y, 0, config.dims.y)
 end
 
 return player

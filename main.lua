@@ -2,6 +2,8 @@ local playerFactory = require("player")
 local enemyFactory = require("enemy")
 local Point2d = require("point2d")
 local game = require("game")
+local config = require("config")
+local utils = require("utils")
 
 function love.load()
 	BigFont = love.graphics.newFont("resources/FiraCode-Regular.ttf", 36)

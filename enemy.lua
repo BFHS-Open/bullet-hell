@@ -1,12 +1,19 @@
 local Point2d = require("point2d")
+local Sprite = require("sprite")
 
 local enemy = {}
 enemy.__index = enemy
+
+local sprites = {
+	homing = Sprite.new("/resources/homing.png", Point2d:rect(10, 10)),
+	ramming = Sprite.new("/resources/ramming.png", Point2d:rect(10, 10))
+}
 
 function enemy.new(type, data)
 	local e = setmetatable(data, enemy)
 
 	e.type = type
+	e.sprite = sprites[type]
 	e.alive = true
 
 	e.speed = 10
@@ -18,13 +25,9 @@ function enemy.new(type, data)
 	e.createdAt = love.timer.getTime()
 
 	if e.type == "homing" then
-		e.image = love.graphics.newImage("resources/homing.png")
-		e.scale = 0.1
-		e.speed = 50
+		e.speed = 5
 	elseif e.type == "ramming" then
-		e.image = love.graphics.newImage("resources/ramming.png")
-		e.scale = 0.1
-		e.speed = 100
+		e.speed = 10
 	end
 
 	return e
@@ -39,7 +42,7 @@ end
 local function updateRamming(self, dt)
 	-- TODO: WILL NEVER DESPAWN AND WILL FLY INTO ABYSS
 
-	self.position = self.position + dt * 10 * Point2d:polar(self.angle)
+	self.position = self.position + dt * self.speed * Point2d:polar(self.angle)
 end
 
 function enemy:update(dt)
@@ -56,10 +59,7 @@ function enemy:update(dt)
 end
 
 function enemy:draw()
-	local imageX = self.position.x + self.image:getWidth() * self.scale * 0.5
-	local imageY = self.position.y + self.image:getHeight() * self.scale * 0.5
-
-	love.graphics.draw(self.image, imageX, imageY, self.scale, self.scale)
+	self.sprite:draw(self.position)
 end
 
 return enemy

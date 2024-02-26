@@ -1,12 +1,15 @@
 local playerFactory = require("player")
 local enemyFactory = require("enemy")
 local Point2d = require("point2d")
+local config = require("config")
+local utils = require("utils")
 
 local game = {}
 game.__index = game
 
 function game.load()
-	Player = playerFactory.new(Point2d:rect(350, 350))
+
+	Player = playerFactory.new(Point2d:rect(50, 50))
 	EnemyTable = {}
 
 	for i = 1, 6 do
@@ -15,8 +18,6 @@ function game.load()
 end
 
 function CreateRandomEnemy(target)
-		local screenX, screenY = love.window.getMode()
-
 		local data = { target = target }
 
 		-- flip coin for axis
@@ -24,15 +25,15 @@ function CreateRandomEnemy(target)
 			-- x axis, flip for left or right side
 
 			data.position = Point2d:rect(
-				love.math.random(0, 1) * screenX,
-				love.math.randomNormal(1/4, 1/2) * screenY
+				love.math.random(0, 1) * config.dims.x,
+				utils.clamp(love.math.randomNormal(1/4, 1/2), 0, 1) * config.dims.y
 			)
 		else
 			-- y axis, flip for top or bottom
 
 			data.position = Point2d:rect(
-				love.math.randomNormal(1/4, 1/2) * screenX,
-				love.math.random(0, 1) * screenY
+				utils.clamp(love.math.randomNormal(1/4, 1/2), 0, 1) * config.dims.x,
+				love.math.random(0, 1) * config.dims.y
 			)
 		end
 
@@ -43,7 +44,7 @@ function CreateRandomEnemy(target)
 		})[love.math.random(2)]
 
 		if type == "ramming" then
-			data.angle = love.math.random() * 360
+			data.angle = love.math.random() * math.pi * 2
 		end
 
 		return enemyFactory.new(type, data)

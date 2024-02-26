@@ -1,3 +1,5 @@
+local Point2d = require("point2d")
+
 local player = {}
 player.__index = player
 
@@ -17,37 +19,30 @@ function player.new(position)
 end
 
 function player:draw()
-  local imageX = self.position.x + self.image:getWidth() * self.scale * 0.5
-  local imageY = self.position.y + self.image:getHeight() * self.scale * 0.5
+	local imageX = self.position.x + self.image:getWidth() * self.scale * 0.5
+	local imageY = self.position.y + self.image:getHeight() * self.scale * 0.5
 
 	love.graphics.draw(self.image, imageX, imageY, self.scale, self.scale)
 end
 
 local function handleInput(self, dt)
-	local dx, dy = 0, 0
-	local adjustment = 1
+	local v = Point2d:rect(0, 0)
 
 	if love.keyboard.isDown("w") then
-		dy = dy - 1
+		v.y = v.y - 1
 	end
 	if love.keyboard.isDown("s") then
-		dy = dy + 1
+		v.y = v.y + 1
 	end
 	if love.keyboard.isDown("d") then
-		dx = dx + 1
+		v.x = v.x + 1
 	end
 	if love.keyboard.isDown("a") then
-		dx = dx - 1
-	end
-
-	-- sqrt(2)
-	if dx ~= 0 and dy ~= 0 then
-		adjustment = 0.707106781
+		v.x = v.x - 1
 	end
 
 	--applies movement
-	self.position.x = self.position.x + dx * dt * self.speed * adjustment
-	self.position.y = self.position.y + dy * dt * self.speed * adjustment
+	self.position = self.position + self.speed * dt * v:unit()
 end
 
 function player:update(dt)

@@ -1,59 +1,50 @@
 local playerFactory = require("player")
 local enemyFactory = require("enemy")
-local point2dFactory = require("point2d")
+local Point2d = require("point2d")
 
 function love.load()
 	love.graphics.setNewFont(12)
 	love.graphics.setBackgroundColor(255, 255, 255)
 	love.window.setMode(700, 700)
 
-	Player = playerFactory.new(point2dFactory.new(350, 350))
+	Player = playerFactory.new(Point2d:rect(350, 350))
 	EnemyTable = {}
 
-
-	for i = 0, 5 do
+	for i = 1, 6 do
 		EnemyTable[i] = CreateRandomEnemy(Player)
 	end
 end
 
-function CreateRandomEnemy(player)
-		local data = {}
+function CreateRandomEnemy(target)
+		local screenX, screenY = love.window.getMode()
 
-		local screenX, screenY, _ = love.window.getMode()
+		local data = { target = target }
 
 		-- flip coin for axis
-		if (love.math.random(0, 1) == 0) then
+		if love.math.random(0, 1) then
 			-- x axis, flip for left or right side
 
-			if (love.math.random(0, 1) == 0) then
-				data["position"] = point2dFactory.new(0, love.math.randomNormal() * screenY)
-			else
-				data["position"] =point2dFactory.new(screenX, love.math.randomNormal() * screenY)
-			end
-
+			data.position = Point2d:rect(
+				love.math.random(0, 1) * screenX,
+				love.math.randomNormal(1/4, 1/2) * screenY
+			)
 		else
 			-- y axis, flip for top or bottom
 
-			if (love.math.random(0, 1) == 0) then
-				data["position"] = point2dFactory.new(love.math.randomNormal() * screenX, 0)
-			else
-				data["position"] = point2dFactory.new(love.math.randomNormal() * screenX, screenY)
-			end
+			data.position = Point2d:rect(
+				love.math.randomNormal(1/4, 1/2) * screenX,
+				love.math.random(0, 1) * screenY
+			)
 		end
 
 		-- generate type
-		local random = love.math.random(0, 1)
+		local type = ({
+			"homing",
+			"ramming"
+		})[love.math.random(2)]
 
-		local type = ""
-
-		data["target"] = player
-
-		if random == 0 then
-			type = "homing"
-		elseif random == 1 then
-			type = "ramming"
-
-			data["angle"] = love.math.random(0, 360)
+		if type == "ramming" then
+			data.angle = love.math.random() * 360
 		end
 
 		return enemyFactory.new(type, data)
@@ -62,12 +53,16 @@ end
 function love.update(dt)
 
 	-- update all enemies
-	for k,v in pairs(EnemyTable) do
-		v:update(dt)
+	for i, enemy in ipairs(EnemyTable) do
+		enemy:update(dt)
 
 		-- delete if dead
-		if not v.alive then
-			EnemyTable.k = nil
+		if not enemy.alive then
+			-- fast delete by moving the last element to i
+			local other = table.remove(EnemyTable)
+			if i <= #table then
+				table[i] = other
+			end
 		end
 	end
 
@@ -77,7 +72,7 @@ end
 function love.draw()
 	Player:draw()
 
-	for _,v in pairs(EnemyTable) do
+	for _,v in ipairs(EnemyTable) do
 		v:draw()
 	end
 end

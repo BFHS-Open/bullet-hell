@@ -1,53 +1,65 @@
-local point2d = {}
-point2d.__index = point2d
+local Point2d = {}
+Point2d.__index = Point2d
 
-function point2d.new(x, y)
-  local p = setmetatable({}, point2d)
-
-  p.x = x
-  p.y = y
-
-  return p
+function Point2d:new(p)
+	setmetatable(p, self)
+	return p
 end
 
-function point2d:getX()
-  return self.x
+function Point2d:rect(x, y)
+	return self:new({ x = x, y = y })
 end
 
-function point2d:getY()
-  return self.y
+function Point2d:polar(angle)
+	return self:new({ x = math.cos(angle), y = math.sin(angle) })
 end
 
-function point2d:distanceTo(other)
-  return math.sqrt((self.x - other.x)^2 + (self.y - other.y)^2)
+function Point2d:copy()
+	return Point2d:new({ x = self.x, y = self.y })
 end
 
-function point2d:goTo(dt, speed, other)
-  local normalizedX, normalizedY = math.normalize((self.x - other.x), (self.y - other.y));
-
-  self.x = self.x - dt * normalizedX * speed
-  self.y = self.y - dt * normalizedY * speed
+function Point2d:unpack()
+	return self.x, self.y
 end
 
-function point2d:move(dt, speed, angle)
-  self.x = self.x - dt * speed * math.cos(angle)
-  self.y = self.y - dt * speed * math.cos(angle)
+function Point2d.__add(a, b)
+	return Point2d:rect(a.x + b.x, a.y + b.y)
 end
 
-function point2d:moveBy(x, y)
-  self.x = self.x + x
-  self.y = self.y + y
+function Point2d.__sub(a, b)
+	return Point2d:rect(a.x - b.x, a.y - b.y)
 end
 
--- stolen from love website
-function math.normalize(x, y)
-	local l = (x * x + y * y) ^ 0.5
-
-	if l == 0 then
-		return 0, 0, 0
-	else
-		return x / l, y / l, l
+function Point2d.__mul(a, b)
+	if type(a) == "number" then
+		a, b = b, a
 	end
+	return Point2d:rect(a.x * b,a.y * b)
 end
 
-return point2d
+function Point2d.__div(a, b)
+	return Point2d:rect(a.x / b, a.y / b)
+end
+
+function Point2d.dot(a, b)
+	return a.x * b.x + a.y * b.y
+end
+
+function Point2d:length()
+	return math.sqrt(self:dot(self))
+end
+
+function Point2d:unit()
+	local length = self:length()
+	if length == 0 then
+		return self:copy()
+	end
+	return self / self:length()
+end
+
+function Point2d:goTo(dist, other)
+	local delta = other - self
+	return self + math.min(dist, delta:length()) * delta:unit()
+end
+
+return Point2d

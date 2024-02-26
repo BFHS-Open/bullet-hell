@@ -30,6 +30,18 @@ function enemy.new(type, data)
   return e
 end
 
+local function updateHoming(self, dt)
+  -- TODO: WILL NEVER DESPAWN
+
+  self.position:goTo(dt, self.speed, self.target.position)
+end
+
+local function updateRamming(self, dt)
+  -- TODO: WILL NEVER DESPAWN AND WILL FLY INTO ABYSS
+
+  self.position:move(dt, 10, self.angle)
+end
+
 function enemy:update(dt)
   -- go to specific update function
   if self.type == "homing" then
@@ -41,18 +53,6 @@ function enemy:update(dt)
   if self.position:distanceTo(self.target.position) < self.killDistance then
     self.target.alive = false
   end
-end
-
-function updateHoming(self, dt)
-  -- TODO: WILL NEVER DESPAWN
-
-  self.position:goTo(dt, self.speed, self.target.position)
-end
-
-function updateRamming(self, dt)
-  -- TODO: WILL NEVER DESPAWN AND WILL FLY INTO ABYSS
-
-  self.position:move(dt, 10, self.angle)
 end
 
 function enemy:draw()

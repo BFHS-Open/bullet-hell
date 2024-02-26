@@ -23,7 +23,7 @@ function player:draw()
 	love.graphics.draw(self.image, imageX, imageY, self.scale, self.scale)
 end
 
-function handleInput(self, dt)
+local function handleInput(self, dt)
 	local dx, dy = 0, 0
 	local adjustment = 1
 

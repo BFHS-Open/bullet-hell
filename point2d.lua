@@ -27,7 +27,7 @@ function point2d:goTo(dt, speed, other)
 
   self.x = self.x - dt * normalizedX * speed
   self.y = self.y - dt * normalizedY * speed
-end 
+end
 
 function point2d:move(dt, speed, angle)
   self.x = self.x - dt * speed * math.cos(angle)

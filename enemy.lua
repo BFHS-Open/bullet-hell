@@ -37,7 +37,7 @@ function enemy:update(dt)
   elseif self.type == "ramming" then
     updateRamming(self, dt)
   end
-  
+
   if self.position:distanceTo(self.target.position) < self.killDistance then
     self.target.alive = false
   end
@@ -45,10 +45,10 @@ end
 
 function updateHoming(self, dt)
   -- TODO: WILL NEVER DESPAWN
- 
+
   self.position:goTo(dt, self.speed, self.target.position)
 end
-  
+
 function updateRamming(self, dt)
   -- TODO: WILL NEVER DESPAWN AND WILL FLY INTO ABYSS
 

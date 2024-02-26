@@ -7,18 +7,18 @@ function love.load()
 	love.graphics.setBackgroundColor(255, 255, 255)
 	love.window.setMode(700, 700)
 
-	player = playerFactory.new(point2dFactory.new(350, 350))
-	enemyTable = {}
+	Player = playerFactory.new(point2dFactory.new(350, 350))
+	EnemyTable = {}
 
 
 	for i = 0, 5 do
-		enemyTable[i] = createRandomEnemy(player)
+		EnemyTable[i] = CreateRandomEnemy(Player)
 	end
 end
 
-function createRandomEnemy(player)
-		data = {}
-	
+function CreateRandomEnemy(player)
+		local data = {}
+
 		local screenX, screenY, _ = love.window.getMode()
 
 		-- flip coin for axis
@@ -31,7 +31,7 @@ function createRandomEnemy(player)
 				data["position"] =point2dFactory.new(screenX, love.math.randomNormal() * screenY)
 			end
 
-		else 
+		else
 			-- y axis, flip for top or bottom
 
 			if (love.math.random(0, 1) == 0) then
@@ -39,7 +39,7 @@ function createRandomEnemy(player)
 			else
 				data["position"] = point2dFactory.new(love.math.randomNormal() * screenX, screenY)
 			end
-		end 
+		end
 
 		-- generate type
 		local random = love.math.random(0, 1)
@@ -47,7 +47,7 @@ function createRandomEnemy(player)
 		local type = ""
 
 		data["target"] = player
-	
+
 		if random == 0 then
 			type = "homing"
 		elseif random == 1 then
@@ -62,22 +62,22 @@ end
 function love.update(dt)
 
 	-- update all enemies
-	for k,v in pairs(enemyTable) do
+	for k,v in pairs(EnemyTable) do
 		v:update(dt)
 
 		-- delete if dead
 		if not v.alive then
-			enemyTable.k = nil
+			EnemyTable.k = nil
 		end
 	end
 
-	player:update(dt)
+	Player:update(dt)
 end
 
 function love.draw()
-	player:draw()
-	
-	for _,v in pairs(enemyTable) do
+	Player:draw()
+
+	for _,v in pairs(EnemyTable) do
 		v:draw()
 	end
 end

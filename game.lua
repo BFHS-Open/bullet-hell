@@ -10,9 +10,11 @@ game.__index = game
 function game.load()
 	Player = playerFactory.new(Point2d:rect(50, 50))
 	EnemyTable = {}
+	cooldown = 0
+	counter = 0
 
 	for i = 1, 6 do
-		EnemyTable[i] = CreateRandomEnemy(Player)
+		CreateRandomEnemy(Player)
 	end
 end
 
@@ -45,12 +47,20 @@ function CreateRandomEnemy(target)
 	if type == "ramming" then
 		data.angle = love.math.random() * math.pi * 2
 	end
-
-	return enemyFactory.new(type, data)
+	
+	counter = counter + 1
+	EnemyTable[counter] = enemyFactory.new(type, data)
 end
 
 function game.update(dt)
 	-- update all enemies
+	cooldown = math.max(cooldown-dt, 0)
+
+	if cooldown == 0 then
+		cooldown = 1
+		CreateRandomEnemy(Player)
+	end
+
 	for i, enemy in ipairs(EnemyTable) do
 		enemy:update(dt)
 

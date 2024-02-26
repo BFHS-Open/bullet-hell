@@ -1,27 +1,29 @@
 local player = {}
 player.__index = player
 
-function player.new(x, y)
+function player.new(position)
 	local p = setmetatable({}, player)
 
-	p.x = x
-	p.y = y
+	p.position = position
+
 	p.image = love.graphics.newImage("resources/player.png")
 	p.scale = 0.1
+
 	p.speed = 350
-	p.radius = p.image:getWidth() / 2 * p.scale
-	p.xcenter = (p.x + p.image:getWidth() * p.scale * .5)
-	p.ycenter = (p.y + p.image:getHeight() * p.scale * .5)
+
 	p.alive = true
+
 	return p
 end
 
-function player:updateCenter()
-	self.xcenter = (self.x + self.image:getWidth() * self.scale * .5)
-	self.ycenter = (self.y + self.image:getHeight() * self.scale * .5)
+function player:draw()
+  local imageX = self.position.x + self.image:getWidth() * self.scale * 0.5
+  local imageY = self.position.y + self.image:getHeight() * self.scale * 0.5
+
+	love.graphics.draw(self.image, imageX, imageY, self.scale, self.scale)
 end
 
-function player:update(dt)
+function handleInput(self, dt)
 	local dx, dy = 0, 0
 	local adjustment = 1
 
@@ -38,29 +40,33 @@ function player:update(dt)
 		dx = dx - 1
 	end
 
+	-- sqrt(2)
 	if dx ~= 0 and dy ~= 0 then
 		adjustment = 0.707106781
 	end
 
 	--applies movement
-	self.x = self.x + dx * dt * self.speed * adjustment
-	self.y = self.y + dy * dt * self.speed * adjustment
-	self:updateCenter()
+	self.position.x = self.position.x + dx * dt * self.speed * adjustment
+	self.position.y = self.position.y + dy * dt * self.speed * adjustment
+end
+
+function player:update(dt)
+	handleInput(self, dt)
 
 	local screenX, screenY, _ = love.window.getMode()
 
 	-- handle screen border collisions
-	if self.x < 0 then
-		self.x = 0
+	if self.position.x < 0 then
+		self.position.x = 0
 	end
-	if self.x + self.image:getWidth() * self.scale > screenX then
-		self.x = screenX - self.image:getWidth() * self.scale
+	if self.position.x + self.image:getWidth() * self.scale > screenX then
+		self.position.x = screenX - self.image:getWidth() * self.scale
 	end
-	if self.y < 0 then
-		self.y = 0
+	if self.position.y < 0 then
+		self.position.y = 0
 	end
-	if self.y + self.image:getHeight() * self.scale > screenY then
-		self.y = screenY - self.image:getHeight() * self.scale
+	if self.position.y + self.image:getHeight() * self.scale > screenY then
+		self.position.y = screenY - self.image:getHeight() * self.scale
 	end
 end
 

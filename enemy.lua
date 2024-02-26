@@ -1,139 +1,66 @@
+local point2d = require("point2d")
+
 local enemy = {}
 enemy.__index = enemy
 
-function enemy.new(x, y, speed, scale, class)
-	local e = setmetatable({}, enemy)
+function enemy.new(type, data)
+  local e = setmetatable(data, enemy)
 
-	e.x = x
-	e.y = y
-	e.scale = scale
-	e.speed = speed
-	e.class = class
-	if e.class == "telegraphed" then 
-		e.image = love.graphics.newImage("resources/crosshairBLK.png")
-		e.blinkCooldown = 5
-		e.imgType = 0
-	else
-		e.image = love.graphics.newImage("resources/enemy.png")
-	end
-	e.xcenter = (e.x + e.image:getWidth() * e.scale * .5)
-	e.ycenter = (e.y + e.image:getHeight() * e.scale * .5)
-	e.radius = e.image:getWidth() / 2 * e.scale
-	e.timeInit = love.timer.getTime()
-	e.alive = true
-	if e.class == "wallProjectile" then
-		e.angle = math.atan((player.y - e.y) / (player.x - e.x))
-	elseif e.class == "axisAligned" then
-		local screenX, screenY, _ = love.window.getMode()
-		if e.x == screenX then
-			e.axis = "left"
-		elseif e.x <= 0 then
-			e.axis = "right"
-		elseif e.y == screenY then
-			e.axis = "up"
-		elseif e.y <= 0 then
-			e.axis = "down"
-		end
-	end
-	return e
-end
+  e.type = type
+  e.alive = true
 
-function math.normalize(x, y)
-	local l = (x * x + y * y) ^ 0.5
+  e.speed = 10
 
-	if l == 0 then
-		return 0, 0, 0
-	else
-		return x / l, y / l, l
-	end
-end
+  -- kill distance used so that it can be set to 0 to not kill
+  -- (mainly for the blinkies)
+  e.killDistance = 2
 
-function enemy:homing(dt)
-	if self:distanceFromPlayer() >= 2 then
-		local normx, normy = math.normalize((self.xcenter - player.xcenter), (self.ycenter - player.ycenter))
+  e.createdAt = love.timer.getTime()
 
-		self.x = self.x - dt * normx * self.speed
-		self.y = self.y - dt * normy * self.speed
-	end
-end
+  if e.type == "homing" then
+    e.image = love.graphics.newImage("resources/homing.png")
+    e.scale = 0.1
+    e.speed = 50
+  elseif e.type == "ramming" then
+    e.image = love.graphics.newImage("resources/ramming.png")
+    e.scale = 0.1
+    e.speed = 100
+  end
 
-function enemy:vectorMovement(dt, angle)
-	self.x = self.x - dt * self.speed * math.cos(angle)
-	self.y = self.y - dt * self.speed * math.sin(angle)
-end
-
-function enemy:updateCenter()
-	self.xcenter = (self.x + self.image:getWidth() * self.scale * .5)
-	self.ycenter = (self.y + self.image:getHeight() * self.scale * .5)
-end
-
-function enemy:distanceFromPlayer()
-	return math.sqrt((self.xcenter - player.xcenter)^2 + (self.ycenter - player.ycenter)^2)
-end
-
-function enemy:collisionDetection()
-	if self:distanceFromPlayer() <= (player.radius + self.radius - 2) then
-		return true
-	end
-	return false
-end
-
-function enemy:axisAlignment(dt)
-	if self.axis == "left" then
-		self.x = self.x - dt * self.speed
-	elseif self.axis == "right" then
-		self.x = self.x + dt * self.speed
-	elseif self.axis == "up" then
-		self.y = self.y - dt * self.speed
-	elseif self.axis == "down" then
-		self.y = self.y + dt * self.speed
-	end
+  return e
 end
 
 function enemy:update(dt)
-	love.graphics.setBackgroundColor(152, 212, 121)
-	elapsedTime = love.timer.getTime() - self.timeInit
-	if self.alive == true then
-		if self.class == "wallProjectile" then
-			self:vectorMovement(dt, self.angle)
-		elseif self.class == "homing" then
-			self:homing(dt)
-			if elapsedTime > 7 then
-				self.alive = false
-			end
-		elseif self.class == "telegraphed" then
-			self:homing(dt)
-			self.blinkCooldown = math.max(self.blinkCooldown - dt,0)
-			if self.blinkCooldown == 0 then
-				self.blinkCooldown = .25
-				if self.imgType == 0 then
-					self.image = love.graphics.newImage("resources/crosshairRED.png")
-					self.imgType = 1
-				else
-					self.image = love.graphics.newImage("resources/crosshairBLK.png")
-					self.imgType = 0
-				end
-			end
-			if elapsedTime > 7 then
-				if self:collisionDetection() then
-					player.alive = false
-				end
-				self.alive = false
-			end
-		elseif self.class == "axisAligned" then
-			self:axisAlignment(dt)
-		end
-		if self.class ~= "telegraphed" then
-			self.alive = not self:collisionDetection()
-			if self.alive == false then
-				player.alive = false
-			end
-		end
-		if elapsedTime > 15 and self.class ~= "stationary" then
-			self.alive = false
-		end
-		self:updateCenter()
-	end
+  -- go to specific update function
+  if self.type == "homing" then
+    updateHoming(self, dt)
+  elseif self.type == "ramming" then
+    updateRamming(self, dt)
+  end
+  
+  print("a" .. self.type)
+  if self.position:distanceTo(self.target.position) < self.killDistance then
+    self.target.alive = false
+  end
+end
+
+function updateHoming(self, dt)
+  -- TODO: WILL NEVER DESPAWN
+ 
+  self.position:goTo(dt, self.speed, self.target.position)
+end
+  
+function updateRamming(self, dt)
+  -- TODO: WILL NEVER DESPAWN AND WILL FLY INTO ABYSS
+
+  self.position:move(dt, 10, self.angle)
+end
+
+function enemy:draw()
+  local imageX = self.position.x + self.image:getWidth() * self.scale * 0.5
+  local imageY = self.position.y + self.image:getHeight() * self.scale * 0.5
+
+  love.graphics.draw(self.image, imageX, imageY, self.scale, self.scale)
 end
 
 return enemy

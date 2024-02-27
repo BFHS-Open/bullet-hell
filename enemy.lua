@@ -5,8 +5,8 @@ local enemy = {}
 enemy.__index = enemy
 
 local sprites = {
-	homing = Sprite.new("/assets/homing.png", Point2d:rect(10, 10)),
-	ramming = Sprite.new("/assets/ramming.png", Point2d:rect(10, 10)),
+	homing = Sprite.new("/assets/homing.png", Point2d.rect(10, 10)),
+	ramming = Sprite.new("/assets/ramming.png", Point2d.rect(10, 10)),
 }
 
 function enemy.new(type, data)
@@ -42,7 +42,7 @@ end
 local function updateRamming(self, dt)
 	-- TODO: WILL NEVER DESPAWN AND WILL FLY INTO ABYSS
 
-	self.position = self.position + dt * self.speed * Point2d:polar(self.angle)
+	self.position = self.position + dt * self.speed * Point2d.polar(self.angle)
 end
 
 function enemy:update(dt)

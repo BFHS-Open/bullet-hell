@@ -1,14 +1,14 @@
 local playerFactory = require("player")
 local enemyFactory = require("enemy")
 local Point2d = require("lib.point2d")
-local config = require("config")
+local config = require("lib.config")
 local utils = require("lib.utils")
 
 local game = {}
 game.__index = game
 
 function game.load()
-	Player = playerFactory.new(Point2d:rect(50, 50))
+	Player = playerFactory.new(Point2d.rect(50, 50))
 	EnemyTable = {}
 	cooldown = 0
 	counter = 0
@@ -25,14 +25,14 @@ function CreateRandomEnemy(target)
 	if love.math.random(0, 1) then
 		-- x axis, flip for left or right side
 
-		data.position = Point2d:rect(
+		data.position = Point2d.rect(
 			love.math.random(0, 1) * config.dims.x,
 			utils.clamp(love.math.randomNormal(1 / 4, 1 / 2), 0, 1) * config.dims.y
 		)
 	else
 		-- y axis, flip for top or bottom
 
-		data.position = Point2d:rect(
+		data.position = Point2d.rect(
 			utils.clamp(love.math.randomNormal(1 / 4, 1 / 2), 0, 1) * config.dims.x,
 			love.math.random(0, 1) * config.dims.y
 		)

@@ -1,21 +1,21 @@
 local Point2d = {}
 Point2d.__index = Point2d
 
-function Point2d:new(p)
-	setmetatable(p, self)
+function Point2d.new(p)
+	setmetatable(p, Point2d)
 	return p
 end
 
-function Point2d:rect(x, y)
-	return self:new({ x = x, y = y })
+function Point2d.rect(x, y)
+	return Point2d.new({ x = x, y = y })
 end
 
-function Point2d:polar(angle)
-	return self:new({ x = math.cos(angle), y = math.sin(angle) })
+function Point2d.polar(angle)
+	return Point2d.new({ x = math.cos(angle), y = math.sin(angle) })
 end
 
 function Point2d:copy()
-	return Point2d:new({ x = self.x, y = self.y })
+	return Point2d.new({ x = self.x, y = self.y })
 end
 
 function Point2d:unpack()
@@ -23,22 +23,22 @@ function Point2d:unpack()
 end
 
 function Point2d.__add(a, b)
-	return Point2d:rect(a.x + b.x, a.y + b.y)
+	return Point2d.rect(a.x + b.x, a.y + b.y)
 end
 
 function Point2d.__sub(a, b)
-	return Point2d:rect(a.x - b.x, a.y - b.y)
+	return Point2d.rect(a.x - b.x, a.y - b.y)
 end
 
 function Point2d.__mul(a, b)
 	if type(a) == "number" then
 		a, b = b, a
 	end
-	return Point2d:rect(a.x * b, a.y * b)
+	return Point2d.rect(a.x * b, a.y * b)
 end
 
 function Point2d.__div(a, b)
-	return Point2d:rect(a.x / b, a.y / b)
+	return Point2d.rect(a.x / b, a.y / b)
 end
 
 function Point2d.dot(a, b)

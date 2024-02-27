@@ -1,4 +1,4 @@
-local config = require("config")
+local config = require("lib.config")
 
 local Sprite = {}
 Sprite.__index = Sprite

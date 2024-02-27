@@ -1,12 +1,12 @@
 local Point2d = require("lib.point2d")
 local Sprite = require("lib.sprite")
-local config = require("config")
+local config = require("lib.config")
 local utils = require("lib.utils")
 
 local player = {}
 player.__index = player
 
-local sprite = Sprite.new("/assets/player.png", Point2d:rect(10, 10))
+local sprite = Sprite.new("/assets/player.png", Point2d.rect(10, 10))
 
 function player.new(position)
 	local p = setmetatable({}, player)
@@ -28,7 +28,7 @@ function player:draw()
 end
 
 local function handleInput(self, dt)
-	local v = Point2d:rect(0, 0)
+	local v = Point2d.rect(0, 0)
 
 	if love.keyboard.isDown("w") then
 		v.y = v.y - 1

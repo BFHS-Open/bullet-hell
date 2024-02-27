@@ -1,2 +1,3 @@
 # personal VS Code configuration
 /.vscode/
+.DS_Store

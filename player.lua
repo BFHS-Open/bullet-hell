@@ -14,7 +14,6 @@ function player.new(position)
 	p.position = position
 
 	p.sprite = sprite
-	p.scale = 0.1
 
 	p.speed = 40
 

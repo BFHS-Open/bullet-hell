@@ -4,21 +4,7 @@ local Point2d = require("lib.point2d")
 local config = require("lib.config")
 local utils = require("lib.utils")
 
-local game = {}
-game.__index = game
-
-function game.load()
-	Player = playerFactory.new(Point2d.rect(50, 50))
-	EnemyTable = {}
-	cooldown = 0
-	counter = 0
-
-	for i = 1, 6 do
-		CreateRandomEnemy(Player)
-	end
-end
-
-function CreateRandomEnemy(target)
+local function CreateRandomEnemy(target)
 	local data = { target = target }
 
 	-- flip coin for axis
@@ -48,41 +34,61 @@ function CreateRandomEnemy(target)
 		data.angle = love.math.random() * math.pi * 2
 	end
 	
-	counter = counter + 1
-	EnemyTable[counter] = enemyFactory.new(type, data)
+	return enemyFactory.new(type, data)
 end
 
-function game.update(dt)
-	-- update all enemies
-	cooldown = math.max(cooldown-dt, 0)
+local Game = {}
+Game.__index = Game
 
-	if cooldown == 0 then
-		cooldown = 1
-		CreateRandomEnemy(Player)
+function Game.new()
+	local game = setmetatable({}, Game);
+
+	game.player = playerFactory.new(Point2d.rect(50, 50))
+	game.enemies = {}
+	game.cooldown = 0
+
+	for _ = 1, 6 do
+		game:spawnEnemy()
 	end
 
-	for i, enemy in ipairs(EnemyTable) do
+	return game;
+end
+
+function Game:spawnEnemy()
+	table.insert(self.enemies, CreateRandomEnemy(self.player))
+end
+
+function Game:update(dt)
+	-- update all enemies
+	self.cooldown = self.cooldown - dt
+
+	while self.cooldown < 0 do
+		self.cooldown = self.cooldown + 1
+		self:spawnEnemy()
+	end
+
+	for i, enemy in ipairs(self.enemies) do
 		enemy:update(dt)
 
 		-- delete if dead
 		if not enemy.alive then
 			-- fast delete by moving the last element to i
-			local other = table.remove(EnemyTable)
+			local other = table.remove(self.enemies)
 			if i <= #table then
 				table[i] = other
 			end
 		end
 	end
 
-	Player:update(dt)
+	self.player:update(dt)
 end
 
-function game.draw()
-	Player:draw()
+function Game:draw()
+	self.player:draw()
 
-	for _, v in ipairs(EnemyTable) do
+	for _, v in ipairs(self.enemies) do
 		v:draw()
 	end
 end
 
-return game
+return Game

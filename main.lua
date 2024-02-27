@@ -1,4 +1,4 @@
-local game = require("game")
+local Game = require("game")
 
 function love.load()
 	BigFont = love.graphics.newFont("assets/FiraCode-Regular.ttf", 36)
@@ -7,14 +7,16 @@ function love.load()
 	GameStarted = false
 end
 
+local game;
+
 function love.update(dt)
 	if not GameStarted then
 		if love.keyboard.isDown("space") then
 			GameStarted = true
-			game.load()
+			game = Game:new()
 		end
 	else
-		game.update(dt)
+		game:update(dt)
 	end
 end
 
@@ -25,6 +27,6 @@ function love.draw()
 		love.graphics.print("Bullet Hell", BigFont, screenX / 2 - 100, screenY / 2 - 120)
 		love.graphics.print("Press Space to Start", RegularFont, screenX / 2 - 130, screenY / 2 + 120)
 	else
-		game.draw()
+		game:draw()
 	end
 end

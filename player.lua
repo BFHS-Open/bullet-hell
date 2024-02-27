@@ -1,12 +1,12 @@
-local Point2d = require("point2d")
-local Sprite = require("sprite")
+local Point2d = require("lib.point2d")
+local Sprite = require("lib.sprite")
 local config = require("config")
-local utils = require("utils")
+local utils = require("lib.utils")
 
 local player = {}
 player.__index = player
 
-local sprite = Sprite.new("/resources/player.png", Point2d:rect(10, 10))
+local sprite = Sprite.new("/assets/player.png", Point2d:rect(10, 10))
 
 function player.new(position)
 	local p = setmetatable({}, player)

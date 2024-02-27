@@ -1,8 +1,8 @@
 local playerFactory = require("player")
 local enemyFactory = require("enemy")
-local Point2d = require("point2d")
+local Point2d = require("lib.point2d")
 local config = require("config")
-local utils = require("utils")
+local utils = require("lib.utils")
 
 local game = {}
 game.__index = game

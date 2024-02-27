@@ -1,16 +1,9 @@
-local playerFactory = require("player")
-local enemyFactory = require("enemy")
-local Point2d = require("point2d")
 local game = require("game")
-local config = require("config")
-local utils = require("utils")
 
 function love.load()
-	BigFont = love.graphics.newFont("resources/FiraCode-Regular.ttf", 36)
-	RegularFont = love.graphics.newFont("resources/FiraCode-Regular.ttf", 24)
-	love.graphics.setBackgroundColor(255, 255, 255)
-	BackgroundImage = love.graphics.newImage("resources/background.png")
-	love.window.setMode(700, 700)
+	BigFont = love.graphics.newFont("assets/FiraCode-Regular.ttf", 36)
+	RegularFont = love.graphics.newFont("assets/FiraCode-Regular.ttf", 24)
+	BackgroundImage = love.graphics.newImage("assets/background.png")
 	GameStarted = false
 end
 

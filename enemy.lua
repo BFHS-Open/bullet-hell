@@ -1,12 +1,12 @@
-local Point2d = require("point2d")
-local Sprite = require("sprite")
+local Point2d = require("lib.point2d")
+local Sprite = require("lib.sprite")
 
 local enemy = {}
 enemy.__index = enemy
 
 local sprites = {
-	homing = Sprite.new("/resources/homing.png", Point2d:rect(10, 10)),
-	ramming = Sprite.new("/resources/ramming.png", Point2d:rect(10, 10)),
+	homing = Sprite.new("/assets/homing.png", Point2d:rect(10, 10)),
+	ramming = Sprite.new("/assets/ramming.png", Point2d:rect(10, 10)),
 }
 
 function enemy.new(type, data)

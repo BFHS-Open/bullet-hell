@@ -20,14 +20,14 @@ function enemy.new(type, data)
 
 	-- kill distance used so that it can be set to 0 to not kill
 	-- (mainly for the blinkies)
-	e.killDistance = 2
+	e.radius = 5
 
 	e.createdAt = love.timer.getTime()
 
 	if e.type == "homing" then
-		e.speed = 5
-	elseif e.type == "ramming" then
 		e.speed = 10
+	elseif e.type == "ramming" then
+		e.speed = 40
 	end
 
 	return e
@@ -53,7 +53,7 @@ function enemy:update(dt)
 		updateRamming(self, dt)
 	end
 
-	if (self.position - self.target.position):length() < self.killDistance then
+	if (self.position - self.target.position):length() < self.radius + self.target.radius then
 		self.target.alive = false
 	end
 end

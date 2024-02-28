@@ -13,9 +13,11 @@ function player.new(position)
 
 	p.position = position
 
+	p.radius = 5
+
 	p.sprite = sprite
 
-	p.speed = 40
+	p.speed = 80
 
 	p.alive = true
 

@@ -59,6 +59,10 @@ function Game:spawnEnemy()
 end
 
 function Game:update(dt)
+	if not self.player.alive then
+		return
+	end
+
 	-- update all enemies
 	self.cooldown = self.cooldown - dt
 
@@ -88,6 +92,12 @@ function Game:draw()
 
 	for _, v in ipairs(self.enemies) do
 		v:draw()
+	end
+
+	if not self.player.alive then
+		-- TODO: actual end screen
+		local screenX, screenY = love.window.getMode()
+		love.graphics.print("game over", BigFont, screenX / 2 - 100, screenY / 2 - 120)
 	end
 end
 

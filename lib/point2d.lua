@@ -49,6 +49,10 @@ function Point2d:length()
 	return math.sqrt(self:dot(self))
 end
 
+function Point2d:angle()
+	return math.atan2(self.y, self.x)
+end
+
 function Point2d:unit()
 	local length = self:length()
 	if length == 0 then

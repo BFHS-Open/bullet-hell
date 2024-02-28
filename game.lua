@@ -31,9 +31,10 @@ local function CreateRandomEnemy(target)
 	})[love.math.random(2)]
 
 	if type == "ramming" then
-		data.angle = love.math.random() * math.pi * 2
+		data.angle = (target.position - data.position):angle() 
+			+ (-1/8 + 1/4 * love.math.random()) * math.pi * 2
 	end
-	
+
 	return enemyFactory.new(type, data)
 end
 

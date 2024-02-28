@@ -1,32 +1,28 @@
+local Menu = require("menu")
 local Game = require("game")
+
+local state;
 
 function love.load()
 	BigFont = love.graphics.newFont("assets/FiraCode-Regular.ttf", 36)
 	RegularFont = love.graphics.newFont("assets/FiraCode-Regular.ttf", 24)
 	BackgroundImage = love.graphics.newImage("assets/background.png")
-	GameStarted = false
+	state = Menu:new()
 end
 
-local game;
+local states = {
+	menu = Menu,
+	game = Game
+}
 
 function love.update(dt)
-	if not GameStarted then
-		if love.keyboard.isDown("space") then
-			GameStarted = true
-			game = Game:new()
-		end
-	else
-		game:update(dt)
+	local next = state:update(dt)
+	if next ~= nil then
+		state = states[next]:new()
 	end
 end
 
 function love.draw()
 	love.graphics.draw(BackgroundImage)
-	if not GameStarted then
-		local screenX, screenY = love.window.getMode()
-		love.graphics.print("Bullet Hell", BigFont, screenX / 2 - 100, screenY / 2 - 120)
-		love.graphics.print("Press Space to Start", RegularFont, screenX / 2 - 130, screenY / 2 + 120)
-	else
-		game:draw()
-	end
+	state:draw()
 end

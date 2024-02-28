@@ -41,7 +41,7 @@ local Game = {}
 Game.__index = Game
 
 function Game.new()
-	local game = setmetatable({}, Game);
+	local game = setmetatable({}, Game)
 
 	game.player = playerFactory.new(Point2d.rect(50, 50))
 	game.enemies = {}
@@ -60,6 +60,9 @@ end
 
 function Game:update(dt)
 	if not self.player.alive then
+		if love.keyboard.isDown("return") then
+			return "menu"
+		end
 		return
 	end
 

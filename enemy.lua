@@ -26,6 +26,7 @@ function enemy.new(type, data)
 
 	if e.type == "homing" then
 		e.speed = 10
+		e.radius = 2
 	elseif e.type == "ramming" then
 		e.speed = 40
 	end

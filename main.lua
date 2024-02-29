@@ -1,12 +1,16 @@
+local config = require("lib.config")
+local Point2d = require("lib.point2d")
+local Sprite = require("lib.sprite")
 local Menu = require("menu")
 local Game = require("game")
 
-local state;
+local state
+local background
 
 function love.load()
 	BigFont = love.graphics.newFont("assets/FiraCode-Regular.ttf", 36)
 	RegularFont = love.graphics.newFont("assets/FiraCode-Regular.ttf", 24)
-	BackgroundImage = love.graphics.newImage("assets/background.png")
+	background = Sprite.new("/assets/background.png", config.dims * 12 / 7)
 	state = Menu:new()
 end
 
@@ -23,6 +27,11 @@ function love.update(dt)
 end
 
 function love.draw()
-	love.graphics.draw(BackgroundImage)
+	local time = love.timer.getTime()
+	local step = time / 60
+	background:draw(config.dims:scale(
+		1/2 + 5/28 * 2 * math.sin(step),
+		1/2 + 5/28 * math.sin(2 * step)
+	))
 	state:draw()
 end

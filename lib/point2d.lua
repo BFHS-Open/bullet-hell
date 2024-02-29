@@ -45,6 +45,10 @@ function Point2d.dot(a, b)
 	return a.x * b.x + a.y * b.y
 end
 
+function Point2d:scale(a, b)
+	return Point2d.rect(self.x * a, self.y * b)
+end
+
 function Point2d:length()
 	return math.sqrt(self:dot(self))
 end

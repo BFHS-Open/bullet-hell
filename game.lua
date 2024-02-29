@@ -11,16 +11,16 @@ local function CreateRandomEnemy(target)
 	if love.math.random(0, 1) then
 		-- x axis, flip for left or right side
 
-		data.position = Point2d.rect(
-			love.math.random(0, 1) * config.dims.x,
-			utils.clamp(love.math.randomNormal(1 / 4, 1 / 2), 0, 1) * config.dims.y
+		data.position = config.dims:scale(
+			love.math.random(0, 1),
+			utils.clamp(love.math.randomNormal(1 / 4, 1 / 2), 0, 1)
 		)
 	else
 		-- y axis, flip for top or bottom
 
-		data.position = Point2d.rect(
-			utils.clamp(love.math.randomNormal(1 / 4, 1 / 2), 0, 1) * config.dims.x,
-			love.math.random(0, 1) * config.dims.y
+		data.position = config.dims:scale(
+			utils.clamp(love.math.randomNormal(1 / 4, 1 / 2), 0, 1),
+			love.math.random(0, 1)
 		)
 	end
 
@@ -52,7 +52,7 @@ function Game.new()
 		game:spawnEnemy()
 	end
 
-	return game;
+	return game
 end
 
 function Game:spawnEnemy()

@@ -6,13 +6,21 @@ Menu.__index = Menu
 function Menu.new(manager)
 	local menu = setmetatable({}, Menu)
 	menu.manager = manager
+	-- TODO: figure out a better way to bind keys
+	menu.onPressBound = function() menu:onPress() end
+	Keys:onPress("space", menu.onPressBound)
 	return menu
 end
 
+function Menu:close()
+	Keys:offPress("space", self.onPressBound)
+end
+
+function Menu:onPress()
+	self.manager:moveTo("game")
+end
+
 function Menu:update(dt)
-	if love.keyboard.isDown("space") then
-		return "game"
-	end
 end
 
 function Menu:draw()

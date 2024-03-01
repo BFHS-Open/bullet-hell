@@ -30,9 +30,10 @@ local warning = Sprite.new("/assets/warning.png", Point2d.rect(10, 10))
 local Game = {}
 Game.__index = Game
 
-function Game.new()
+function Game.new(manager)
 	local game = setmetatable({}, Game)
 
+	game.manager = manager
 	game.player = Player.new(Point2d.rect(50, 50))
 	game.enemies = Set.new()
 	game.cooldown = 0
@@ -44,7 +45,19 @@ function Game.new()
 		game:queueEnemy()
 	end
 
+	-- TODO: figure out a better way to bind keys
+	game.onPressBound = function() game:onPress() end
+	Keys:onPress("space", game.onPressBound)
+
 	return game
+end
+
+function Game:close()
+	Keys:offPress("space", self.onPressBound)
+end
+
+function Game:onPress()
+	self.manager:moveTo("menu")
 end
 
 function Game:queueEnemy()
@@ -80,7 +93,7 @@ local spawnDelay = 1/2
 function Game:update(dt)
 	if not self.player.alive then
 		if love.keyboard.isDown("return") then
-			return "menu"
+			self.manager:moveTo("menu")
 		end
 		return
 	end

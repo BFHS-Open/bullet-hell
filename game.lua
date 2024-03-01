@@ -40,7 +40,7 @@ local function CreateRandomEnemy(target)
 	return enemyFactory.new(type, data)
 end
 
-local warning = Sprite.new("/assets/gold.jpg", Point2d.rect(5, 5))
+local warning = Sprite.new("/assets/warning.png", Point2d.rect(10, 10))
 
 local Game = {}
 Game.__index = Game
@@ -120,7 +120,6 @@ function Game:draw()
 		warning:draw(self.queue[i].enemy.position)
 	end
 
-	
 	if self.player.alive then
 		-- UI
 		utils.drawText(string.format("%.2f", self.time), BigFont, 95, 95, -1, -1)

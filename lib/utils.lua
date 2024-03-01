@@ -1,4 +1,5 @@
 local config = require("lib.config")
+local Point2d = require("lib.point2d")
 
 local utils = {}
 
@@ -16,6 +17,14 @@ function utils.drawText(text, font, x, y, horz, vert)
 		0,
 		1, 1,
 		textWidth * (1 - horz) / 2, textHeight * (1 - vert) / 2
+	)
+end
+
+function utils.inBounds(position, padding)
+	local x, y = position:unpack()
+	return Point2d.rect(
+		utils.clamp(x, padding, config.dims.x - padding),
+		utils.clamp(y, padding, config.dims.y - padding)
 	)
 end
 

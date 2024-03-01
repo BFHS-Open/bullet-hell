@@ -6,25 +6,29 @@ local config = require("lib.config")
 local utils = require("lib.utils")
 local Sprite = require("lib.sprite")
 
-local function CreateRandomEnemy(target)
-	local data = { target = target }
-
-	-- flip coin for axis
-	if love.math.random(0, 1) then
+local function randomSpawnPosition()
+	if love.math.random(2) == 1 then
 		-- x axis, flip for left or right side
 
-		data.position = config.dims:scale(
+		return config.dims:scale(
 			love.math.random(0, 1),
 			utils.clamp(love.math.randomNormal(1 / 4, 1 / 2), 0, 1)
 		)
 	else
 		-- y axis, flip for top or bottom
 
-		data.position = config.dims:scale(
+		return config.dims:scale(
 			utils.clamp(love.math.randomNormal(1 / 4, 1 / 2), 0, 1),
 			love.math.random(0, 1)
 		)
 	end
+end
+
+local function randomEnemy(position, target)
+	local data = {
+		position = position,
+		target = target
+	}
 
 	-- generate type
 	local type = ({
@@ -65,9 +69,12 @@ end
 function Game:queueEnemy()
 	self.queue:pushBack({
 		time = self.time,
-		enemy = CreateRandomEnemy(self.player)
+		position = randomSpawnPosition()
 	})
 end
+
+local spawnTime = 1
+local spawnDelay = 1/2
 
 function Game:update(dt)
 	if not self.player.alive then
@@ -83,13 +90,13 @@ function Game:update(dt)
 	self.cooldown = self.cooldown - dt
 
 	while self.cooldown < 0 do
-		self.cooldown = self.cooldown + 1
+		self.cooldown = self.cooldown + spawnTime
 		self:queueEnemy()
 	end
 
 	-- resolve spawns
-	while self.queue:len() ~= 0 and (self.time - self.queue:front().time > 1/2) do
-		table.insert(self.enemies, self.queue:popFront().enemy)
+	while self.queue:len() ~= 0 and (self.time - self.queue:front().time > spawnDelay) do
+		table.insert(self.enemies, randomEnemy(self.queue:popFront().position, self.player))
 	end
 
 	-- update all enemies
@@ -117,7 +124,10 @@ function Game:draw()
 	end
 
 	for i = self.queue.first, self.queue.last do
-		warning:draw(self.queue[i].enemy.position)
+		local item = self.queue[i]
+		local fadeIn = math.max(1 - (self.time - item.time) / spawnDelay * 4, 0)
+		local fadeOut = math.min(1 - (item.time + spawnDelay - self.time) / spawnDelay * 2, 1)
+		warning:draw(utils.inBounds(item.position, 5), 1 + fadeIn, (1 - fadeIn) * (1 - fadeOut))
 	end
 
 	if self.player.alive then

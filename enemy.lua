@@ -22,7 +22,7 @@ function enemy.new(type, data)
 	-- (mainly for the blinkies)
 	e.radius = 5
 
-	e.createdAt = love.timer.getTime()
+	e.createdAt = Time
 
 	if e.type == "homing" then
 		e.speed = 10

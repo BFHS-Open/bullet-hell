@@ -1,8 +1,10 @@
 local playerFactory = require("player")
 local enemyFactory = require("enemy")
 local Point2d = require("lib.point2d")
+local List = require("lib.list")
 local config = require("lib.config")
 local utils = require("lib.utils")
+local Sprite = require("lib.sprite")
 
 local function CreateRandomEnemy(target)
 	local data = { target = target }
@@ -38,6 +40,8 @@ local function CreateRandomEnemy(target)
 	return enemyFactory.new(type, data)
 end
 
+local warning = Sprite.new("/assets/gold.jpg", Point2d.rect(5, 5))
+
 local Game = {}
 Game.__index = Game
 
@@ -47,16 +51,20 @@ function Game.new()
 	game.player = playerFactory.new(Point2d.rect(50, 50))
 	game.enemies = {}
 	game.cooldown = 0
+	game.queue = List.new()
 
 	for _ = 1, 6 do
-		game:spawnEnemy()
+		game:queueEnemy()
 	end
 
 	return game
 end
 
-function Game:spawnEnemy()
-	table.insert(self.enemies, CreateRandomEnemy(self.player))
+function Game:queueEnemy()
+	self.queue:pushBack({
+		time = Time,
+		enemy = CreateRandomEnemy(self.player)
+	})
 end
 
 function Game:update(dt)
@@ -67,14 +75,20 @@ function Game:update(dt)
 		return
 	end
 
-	-- update all enemies
+	-- queue spawns
 	self.cooldown = self.cooldown - dt
 
 	while self.cooldown < 0 do
 		self.cooldown = self.cooldown + 1
-		self:spawnEnemy()
+		self:queueEnemy()
 	end
 
+	-- resolve spawns
+	while self.queue:len() ~= 0 and (Time - self.queue:front().time > 1/2) do
+		table.insert(self.enemies, self.queue:popFront().enemy)
+	end
+
+	-- update all enemies
 	for i, enemy in ipairs(self.enemies) do
 		enemy:update(dt)
 
@@ -96,6 +110,10 @@ function Game:draw()
 
 	for _, v in ipairs(self.enemies) do
 		v:draw()
+	end
+
+	for i = self.queue.first, self.queue.last do
+		warning:draw(self.queue[i].enemy.position)
 	end
 
 	if not self.player.alive then

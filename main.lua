@@ -12,6 +12,7 @@ function love.load()
 	RegularFont = love.graphics.newFont("assets/FiraCode-Regular.ttf", 24)
 	background = Sprite.new("/assets/background.png", config.dims * 12 / 7)
 	state = Menu:new()
+	Time = 0
 end
 
 local states = {
@@ -20,6 +21,7 @@ local states = {
 }
 
 function love.update(dt)
+	Time = Time + dt
 	local next = state:update(dt)
 	if next ~= nil then
 		state = states[next]:new()
@@ -27,8 +29,7 @@ function love.update(dt)
 end
 
 function love.draw()
-	local time = love.timer.getTime()
-	local step = time / 60
+	local step = Time / 60
 	background:draw(config.dims:scale(
 		1/2 + 5/28 * 2 * math.sin(step),
 		1/2 + 5/28 * math.sin(2 * step)

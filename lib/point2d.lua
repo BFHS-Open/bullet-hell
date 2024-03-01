@@ -41,6 +41,10 @@ function Point2d.__div(a, b)
 	return Point2d.rect(a.x / b, a.y / b)
 end
 
+function Point2d.__eq(a, b)
+	return a.x == b.x and a.y == b.y
+end
+
 function Point2d.dot(a, b)
 	return a.x * b.x + a.y * b.y
 end

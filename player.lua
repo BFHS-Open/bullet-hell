@@ -3,14 +3,14 @@ local Sprite = require("lib.sprite")
 local config = require("lib.config")
 local utils = require("lib.utils")
 
-local player = {}
-player.__index = player
+local Player = {}
+Player.__index = Player
 
 local radius = 5
 local sprite = Sprite.new("/assets/player.png", Point2d.rect(radius, radius) * 2)
 
-function player.new(position)
-	local p = setmetatable({}, player)
+function Player.new(position)
+	local p = setmetatable({}, Player)
 
 	p.position = position
 
@@ -25,7 +25,7 @@ function player.new(position)
 	return p
 end
 
-function player:draw()
+function Player:draw()
 	self.sprite:draw(self.position)
 end
 
@@ -49,11 +49,11 @@ local function handleInput(self, dt)
 	self.position = self.position + self.speed * dt * v:unit()
 end
 
-function player:update(dt)
+function Player:update(dt)
 	handleInput(self, dt)
 
 	-- handle screen border collisions
-	self.position = utils.inBounds(self.position, self.radius)
+	self.position = utils.moveInBounds(self.position, self.radius)
 end
 
-return player
+return Player

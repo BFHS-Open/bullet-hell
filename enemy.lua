@@ -1,16 +1,20 @@
 local Point2d = require("lib.point2d")
 local Sprite = require("lib.sprite")
+local utils  = require("lib.utils")
+local config = require("lib.config")
 
-local enemy = {}
-enemy.__index = enemy
+local enterTime = 1/4
+
+local Enemy = {}
+Enemy.__index = Enemy
 
 local sprites = {
+	straight = Sprite.new("/assets/straight.png", Point2d.rect(10, 10)),
 	homing = Sprite.new("/assets/homing.png", Point2d.rect(10, 10)),
-	ramming = Sprite.new("/assets/ramming.png", Point2d.rect(10, 10)),
 }
 
-function enemy.new(type, data)
-	local e = setmetatable(data, enemy)
+function Enemy.new(type, data, game)
+	local e = setmetatable(data, Enemy)
 
 	e.type = type
 	e.sprite = sprites[type]
@@ -22,36 +26,41 @@ function enemy.new(type, data)
 	-- (mainly for the blinkies)
 	e.radius = 5
 
-	e.createdAt = Time
+	e.game = game
+	e.spawnTime = game.time
 
 	if e.type == "homing" then
 		e.speed = 10
 		e.radius = 2
-	elseif e.type == "ramming" then
+	elseif e.type == "straight" then
 		e.speed = 40
 	end
 
 	return e
 end
 
-local function updateHoming(self, dt)
-	-- TODO: WILL NEVER DESPAWN
+local function updateHoming(enemy, dt)
+	enemy.position = enemy.position:goTo(dt * enemy.speed, enemy.target.position)
 
-	self.position = self.position:goTo(dt * self.speed, self.target.position)
+	if enemy.game.time - enemy.spawnTime > config.dims:length() / enemy.speed then
+		enemy.alive = false
+	end
 end
 
-local function updateRamming(self, dt)
-	-- TODO: WILL NEVER DESPAWN AND WILL FLY INTO ABYSS
+local function updateStraight(enemy, dt)
+	enemy.position = enemy.position + dt * enemy.speed * Point2d.polar(enemy.angle)
 
-	self.position = self.position + dt * self.speed * Point2d.polar(self.angle)
+	if enemy.position ~= utils.moveInBounds(enemy.position, -enemy.radius) then
+		enemy.alive = false
+	end
 end
 
-function enemy:update(dt)
+function Enemy:update(dt)
 	-- go to specific update function
 	if self.type == "homing" then
 		updateHoming(self, dt)
-	elseif self.type == "ramming" then
-		updateRamming(self, dt)
+	elseif self.type == "straight" then
+		updateStraight(self, dt)
 	end
 
 	if (self.position - self.target.position):length() < self.radius + self.target.radius then
@@ -59,8 +68,9 @@ function enemy:update(dt)
 	end
 end
 
-function enemy:draw()
-	self.sprite:draw(self.position)
+function Enemy:draw()
+	local fadeIn = math.max(1 - (self.game.time - self.spawnTime) / enterTime, 0)
+	self.sprite:draw(self.position, 1, 1 - fadeIn)
 end
 
-return enemy
+return Enemy

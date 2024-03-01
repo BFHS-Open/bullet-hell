@@ -20,7 +20,7 @@ function utils.drawText(text, font, x, y, horz, vert)
 	)
 end
 
-function utils.inBounds(position, padding)
+function utils.moveInBounds(position, padding)
 	local x, y = position:unpack()
 	return Point2d.rect(
 		utils.clamp(x, padding, config.dims.x - padding),

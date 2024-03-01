@@ -1,3 +1,5 @@
+local utils = require("lib.utils")
+
 local Menu = {}
 Menu.__index = Menu
 
@@ -14,9 +16,8 @@ function Menu:update(dt)
 end
 
 function Menu:draw()
-	local screenX, screenY = love.window.getMode()
-	love.graphics.print("Bullet Hell", BigFont, screenX / 2 - 100, screenY / 2 - 120)
-	love.graphics.print("Press Space to Start", RegularFont, screenX / 2 - 130, screenY / 2 + 120)
+	utils.drawText("Bullet Hell", BigFont, 50, 45, 0, 0)
+	utils.drawText("press space to start", RegularFont, 50, 55, 0, 0)
 end
 
 return Menu

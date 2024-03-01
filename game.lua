@@ -52,6 +52,8 @@ function Game.new()
 	game.enemies = {}
 	game.cooldown = 0
 	game.queue = List.new()
+	-- simulation time is tracked separately from global time
+	game.time = 0
 
 	for _ = 1, 6 do
 		game:queueEnemy()
@@ -62,7 +64,7 @@ end
 
 function Game:queueEnemy()
 	self.queue:pushBack({
-		time = Time,
+		time = self.time,
 		enemy = CreateRandomEnemy(self.player)
 	})
 end
@@ -75,6 +77,8 @@ function Game:update(dt)
 		return
 	end
 
+	self.time = self.time + dt
+
 	-- queue spawns
 	self.cooldown = self.cooldown - dt
 
@@ -84,7 +88,7 @@ function Game:update(dt)
 	end
 
 	-- resolve spawns
-	while self.queue:len() ~= 0 and (Time - self.queue:front().time > 1/2) do
+	while self.queue:len() ~= 0 and (self.time - self.queue:front().time > 1/2) do
 		table.insert(self.enemies, self.queue:popFront().enemy)
 	end
 
@@ -116,10 +120,13 @@ function Game:draw()
 		warning:draw(self.queue[i].enemy.position)
 	end
 
-	if not self.player.alive then
+	
+	if self.player.alive then
+		-- UI
+		utils.drawText(string.format("%.2f", self.time), BigFont, 95, 95, -1, -1)
+	else
 		-- TODO: actual end screen
-		local screenX, screenY = love.window.getMode()
-		love.graphics.print("game over", BigFont, screenX / 2 - 100, screenY / 2 - 120)
+		utils.drawText(string.format("Score: %.2f", self.time), BigFont, 50, 50, 0, 0)
 	end
 end
 

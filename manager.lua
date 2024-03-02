@@ -1,22 +1,19 @@
-local Menu = require("menu")
+local Home = require("home")
 local Game = require("game")
-local Keymapper = require("keymapper")
 
 local Manager = {}
 Manager.__index = Manager
 
 local states = {
-	menu = Menu,
+	home = Home,
 	game = Game
 }
 
 function Manager.new(State)
 	local manager = setmetatable({}, Manager)
 
-	-- globals for convenience
+	-- global for convenience
 	Time = 0
-	Keys = Keymapper.new()
-	Keys:activate()
 
 	manager.state = State.new(manager)
 	return manager
@@ -31,8 +28,11 @@ function Manager:draw()
 	self.state:draw()
 end
 
+function Manager:onPress(...)
+	self.state:onPress(...)
+end
+
 function Manager:moveTo(state)
-	self.state:close()
 	self.state = states[state].new(self)
 end
 

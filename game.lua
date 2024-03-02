@@ -45,19 +45,14 @@ function Game.new(manager)
 		game:queueEnemy()
 	end
 
-	-- TODO: figure out a better way to bind keys
-	game.onPressBound = function() game:onPress() end
-	Keys:onPress("space", game.onPressBound)
-
 	return game
 end
 
-function Game:close()
-	Keys:offPress("space", self.onPressBound)
-end
-
-function Game:onPress()
-	self.manager:moveTo("menu")
+function Game:onPress(key)
+	if self.player.alive or key ~= "space" then
+		return
+	end
+	self.manager:moveTo("home")
 end
 
 function Game:queueEnemy()
@@ -92,9 +87,6 @@ local spawnDelay = 1/2
 
 function Game:update(dt)
 	if not self.player.alive then
-		if love.keyboard.isDown("return") then
-			self.manager:moveTo("menu")
-		end
 		return
 	end
 

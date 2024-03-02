@@ -1,7 +1,7 @@
 local config = require("lib.config")
 local Sprite = require("lib.sprite")
 local Manager = require("manager")
-local Menu = require("menu")
+local Home = require("home")
 
 local manager
 local background
@@ -12,7 +12,7 @@ function love.load()
 	RegularFont = love.graphics.newFont("assets/FiraCode-Regular.ttf", 24)
 
 	background = Sprite.new("/assets/background.png", config.dims * 12 / 7)
-	manager = Manager.new(Menu)
+	manager = Manager.new(Home)
 end
 
 function love.update(dt)
@@ -26,4 +26,11 @@ function love.draw()
 		1/2 + 5/28 * math.sin(2 * step)
 	))
 	manager:draw()
+end
+
+function love.keypressed(key, scancode, isrepeat)
+	if isrepeat then
+		return
+	end
+	manager:onPress(key, scancode)
 end

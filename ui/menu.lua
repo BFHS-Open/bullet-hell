@@ -4,10 +4,10 @@ local Point2d = require("lib.point2d")
 local Menu = {}
 Menu.__index = Menu
 
-function Menu.new(buttons)
+function Menu.new(buttons, selected)
 	local menu = setmetatable({}, Menu)
 	menu.buttons = buttons
-	menu.selected = 1
+	menu.selected = selected or 1
 	return menu
 end
 

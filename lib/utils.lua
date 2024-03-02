@@ -20,13 +20,15 @@ end
 function utils.drawText(text, font, x, y, horz, vert)
 	local windowPos = utils.windowFromWorld(Point2d.rect(x, y))
 	local textWidth = font:getWidth(text)
-	local textHeight = font:getHeight()
+	local _, newlines = text:gsub("\n", "\n")
+	local textHeight = font:getHeight() * (newlines + 1)
+	-- flooring is to avoid blurry text
 	love.graphics.print(
 		text, font,
-		windowPos.x, windowPos.y,
+		math.floor(windowPos.x), math.floor(windowPos.y),
 		0,
 		1, 1,
-		textWidth * (1 - horz) / 2, textHeight * (1 - vert) / 2
+		math.floor(textWidth * (1 - horz) / 2), math.floor(textHeight * (1 - vert) / 2)
 	)
 end
 

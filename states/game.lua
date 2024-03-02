@@ -1,5 +1,5 @@
-local Player = require("player")
-local Enemy = require("enemy")
+local Player = require("entities.player")
+local Enemy = require("entities.enemy")
 local Point2d = require("lib.point2d")
 local List = require("lib.list")
 local config = require("lib.config")
@@ -52,7 +52,7 @@ function Game:onPress(key)
 	if self.player.alive or key ~= "space" then
 		return
 	end
-	self.manager:moveTo("home")
+	self.manager:moveTo("home", "game")
 end
 
 function Game:queueEnemy()

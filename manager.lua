@@ -1,12 +1,14 @@
-local Home = require("home")
-local Game = require("game")
+local Home = require("states.home")
+local Game = require("states.game")
+local Credits = require("states.credits")
 
 local Manager = {}
 Manager.__index = Manager
 
 local states = {
 	home = Home,
-	game = Game
+	game = Game,
+	credits = Credits
 }
 
 function Manager.new(State)
@@ -32,8 +34,8 @@ function Manager:onPress(...)
 	self.state:onPress(...)
 end
 
-function Manager:moveTo(state)
-	self.state = states[state].new(self)
+function Manager:moveTo(state, ...)
+	self.state = states[state].new(self, ...)
 end
 
 return Manager

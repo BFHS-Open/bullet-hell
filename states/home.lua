@@ -1,11 +1,11 @@
 local utils = require("lib.utils")
-local Menu = require("menu")
+local Menu = require("ui.menu")
 local Point2d = require("lib.point2d")
 
 local Home = {}
 Home.__index = Home
 
-function Home.new(manager)
+function Home.new(manager, from)
 	local home = setmetatable({}, Home)
 	home.manager = manager
 	home.menu = Menu.new({
@@ -28,7 +28,12 @@ function Home.new(manager)
 		},
 		{
 			label = "Credits",
-			onPress = function() end
+			onPress = function(self, key)
+				if key ~= "space" then
+					return
+				end
+				home.manager:moveTo("credits")
+			end
 		},
 		{
 			label = "Quit",
@@ -39,7 +44,11 @@ function Home.new(manager)
 				love.event.quit()
 			end
 		}
-	})
+	}, ({
+		game = 1,
+		leaderboard = 3,
+		credits = 4
+	})[from])
 	return home
 end
 

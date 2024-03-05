@@ -41,7 +41,7 @@ function Game.new(manager)
 	-- simulation time is tracked separately from global time
 	game.time = 0
 
-	for _ = 1, 6 do
+	for _ = 1, 4 do
 		game:queueEnemy()
 	end
 

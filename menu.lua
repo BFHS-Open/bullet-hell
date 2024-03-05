@@ -17,7 +17,7 @@ end
 
 function Menu:draw()
 	utils.drawText("Bullet Hell", BigFont, 50, 45, 0, 0)
-	utils.drawText("press space to start", RegularFont, 50, 55, 0, 0)
+	utils.drawText("Press Space to Start", RegularFont, 50, 55, 0, 0)
 end
 
 return Menu

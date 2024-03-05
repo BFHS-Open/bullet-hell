@@ -40,7 +40,7 @@ function Game.new()
 	-- simulation time is tracked separately from global time
 	game.time = 0
 
-	for _ = 1, 6 do
+	for _ = 1, 4 do
 		game:queueEnemy()
 	end
 
@@ -59,12 +59,14 @@ function Game:randomEnemy(position, target)
 		position = position,
 		target = target
 	}
-
+	local type
 	-- generate type
-	local type = ({
-		"homing",
-		"straight",
-	})[love.math.random(2)]
+	local typeRand = love.math.random()
+	if typeRand < .55 then
+		type = "straight"
+	else
+		type = "homing"
+	end
 
 	if type == "straight" then
 		data.angle = (target.position - data.position):angle() 
@@ -75,7 +77,7 @@ function Game:randomEnemy(position, target)
 end
 
 local spawnTime = 1
-local spawnDelay = 1/2
+local spawnDelay = 3/2
 
 function Game:update(dt)
 	if not self.player.alive then
@@ -133,7 +135,8 @@ function Game:draw()
 		utils.drawText(string.format("%.2f", self.time), BigFont, 95, 95, -1, -1)
 	else
 		-- TODO: actual end screen
-		utils.drawText(string.format("Score: %.2f", self.time), BigFont, 50, 50, 0, 0)
+		utils.drawText(string.format("Score: %.2f", self.time), BigFont, 50, 48, 0, 0)
+		utils.drawText("Press Enter to Restart", RegularFont, 50, 55, 0, 0)
 	end
 end
 

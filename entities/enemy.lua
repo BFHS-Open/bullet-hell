@@ -30,7 +30,7 @@ function Enemy.new(type, data, game)
 	e.spawnTime = game.time
 
 	if e.type == "homing" then
-		e.speed = 10
+		e.speed = 20
 		e.radius = 2
 	elseif e.type == "straight" then
 		e.speed = 40
@@ -63,7 +63,7 @@ function Enemy:update(dt)
 		updateStraight(self, dt)
 	end
 
-	if (self.position - self.target.position):length() < self.radius + self.target.radius then
+	if (self.position - self.target.position):length() < self.radius + self.target.radius and self.game.time - self.spawnTime > .2 then
 		self.target.alive = false
 	end
 end

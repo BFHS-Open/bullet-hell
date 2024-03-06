@@ -16,7 +16,7 @@ function StraightEnemy.new(data, game)
 	e.alive = true
 
 	e.radius = 5
-	e.speed = 40
+	e.speed = utils.random(10, 50)
 
 	return e
 end

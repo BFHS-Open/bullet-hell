@@ -11,6 +11,10 @@ function utils.lerp(a, b, x)
 	return a + (b - a) * x
 end
 
+function utils.random(min, max)
+	return min + love.math.random() * (max - min)
+end
+
 function utils.worldFromWindow(v)
 	local windowWidth, windowHeight = love.window:getMode()
 	return v:scale(config.dims.x / windowWidth, config.dims.y / windowHeight)

@@ -64,6 +64,23 @@ function Home:draw()
 end
 
 function Home:onPress(...)
+	-- no settings menu, so - and + directly resize screen
+	local key = ...
+	if key == "-" then
+		local width, height = love.window.getMode()
+		love.window.setMode(
+			math.max(width - 100, 100),
+			math.max(height - 100, 100)
+		)
+		return
+	elseif key == "=" then
+		local width, height = love.window.getMode()
+		love.window.setMode(
+			math.min(width + 100, 4000),
+			math.min(height + 100, 4000)
+		)
+		return
+	end
 	self.menu:onPress(...)
 end
 

@@ -14,8 +14,9 @@ function HomingEnemy.new(data, game)
 	e.game = game
 	e.spawnTime = game.time
 	e.alive = true
+	e.weak = true
 
-	e.radius = 2
+	e.radius = 3
 	e.speed = utils.random(10, 30)
 	e.angleSpeed = math.pi / 2 / (e.speed / 20)
 

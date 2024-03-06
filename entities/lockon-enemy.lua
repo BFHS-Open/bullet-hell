@@ -40,6 +40,11 @@ function LockonEnemy:update(dt)
 		if self.game.time - self.activateTime < activateDelay then
 			return
 		end
+		for other in self.game.enemies:pairs() do
+			if other.weak and (self.position - other.position):length() < self.radius + other.radius then
+				other.alive = false
+			end
+		end
 		if (self.position - self.target.position):length() < self.radius + self.target.radius then
 			self.target.alive = false
 		end

@@ -5,8 +5,8 @@ local utils = require("lib.utils")
 local Player = {}
 Player.__index = Player
 
-local radius = 5
-local sprite = Sprite.new("/assets/player.png", Point2d.rect(radius, radius) * 2)
+local radius = 4
+local sprite = Sprite.new("/assets/player.png", Point2d.rect(10, 10))
 
 function Player.new(position)
 	local p = setmetatable({}, Player)

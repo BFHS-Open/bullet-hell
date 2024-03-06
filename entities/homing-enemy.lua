@@ -33,11 +33,6 @@ function HomingEnemy:update(dt)
 	self.angle = self.angle + deltaAngle
 	self.position = self.position + dt * self.speed * Point2d.polar(self.angle)
 
-	if self.game.time - self.spawnTime > 20 then
-		self.alive = false
-		return
-	end
-
 	if (self.position - self.target.position):length() < self.radius + self.target.radius
 		and self.game.time - self.spawnTime > enterTime
 	then

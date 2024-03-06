@@ -7,6 +7,10 @@ function utils.clamp(a, min, max)
 	return math.min(math.max(a, min), max)
 end
 
+function utils.lerp(a, b, x)
+	return a + (b - a) * x
+end
+
 function utils.worldFromWindow(v)
 	local windowWidth, windowHeight = love.window:getMode()
 	return v:scale(config.dims.x / windowWidth, config.dims.y / windowHeight)

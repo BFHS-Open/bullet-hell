@@ -10,9 +10,10 @@ function Sprite.new(path, dims)
 	return sprite
 end
 
-function Sprite:draw(pos, scale, alpha)
+function Sprite:draw(pos, scale, alpha, angle)
 	scale = scale or 1
 	alpha = alpha or 1
+	angle = angle or 0
 	local imageWidth, imageHeight = self.image:getDimensions()
 	local windowDims = utils.windowFromWorld(self.dims)
 	local windowPos = utils.windowFromWorld(pos)
@@ -21,7 +22,7 @@ function Sprite:draw(pos, scale, alpha)
 		self.image,
 		windowPos.x,
 		windowPos.y,
-		0,
+		angle,
 		windowDims.x / imageWidth * scale,
 		windowDims.y / imageHeight * scale,
 		imageWidth / 2,

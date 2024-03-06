@@ -1,6 +1,7 @@
 local Point2d = require("lib.point2d")
 local Sprite = require("lib.sprite")
 local config = require("lib.config")
+local utils  = require("lib.utils")
 
 local HomingEnemy = {}
 HomingEnemy.__index = HomingEnemy
@@ -17,6 +18,7 @@ function HomingEnemy.new(data, game)
 
 	e.radius = 2
 	e.speed = 20
+	e.angleSpeed = math.pi / 2
 
 	return e
 end
@@ -24,9 +26,14 @@ end
 local enterTime = 1/4
 
 function HomingEnemy:update(dt)
-	self.position = self.position:goTo(dt * self.speed, self.target.position)
+	local targetAngle = (self.target.position - self.position):angle()
+	local deltaAngle = (targetAngle - self.angle + math.pi) % (2 * math.pi) - math.pi
+	local maxDeltaAngle = dt * self.angleSpeed
+	deltaAngle = utils.clamp(deltaAngle, -maxDeltaAngle, maxDeltaAngle)
+	self.angle = self.angle + deltaAngle
+	self.position = self.position + dt * self.speed * Point2d.polar(self.angle)
 
-	if self.game.time - self.spawnTime > config.dims:length() / self.speed then
+	if self.game.time - self.spawnTime > 20 then
 		self.alive = false
 		return
 	end
@@ -40,7 +47,7 @@ end
 
 function HomingEnemy:draw()
 	local fadeIn = math.max(1 - (self.game.time - self.spawnTime) / enterTime, 0)
-	self.sprite:draw(self.position, 1, 1 - fadeIn)
+	self.sprite:draw(self.position, 1, 1 - fadeIn, self.angle)
 end
 
 return HomingEnemy

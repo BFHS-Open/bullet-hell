@@ -75,10 +75,8 @@ function Game:randomEnemy(position, target)
 		StraightEnemy,
 	})[love.math.random(2)]
 
-	if Enemy == StraightEnemy then
-		data.angle = (target.position - data.position):angle() 
-			+ (-1/8 + 1/4 * love.math.random()) * math.pi * 2
-	end
+	data.angle = (target.position - data.position):angle() 
+		+ (-1/8 + 1/4 * love.math.random()) * math.pi * 2
 
 	return Enemy.new(data, self)
 end

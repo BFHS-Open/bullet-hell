@@ -1,6 +1,5 @@
 local Point2d = require("lib.point2d")
 local Sprite = require("lib.sprite")
-local config = require("lib.config")
 local utils  = require("lib.utils")
 
 local HomingEnemy = {}

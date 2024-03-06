@@ -11,14 +11,13 @@ function love.load()
 	RegularFont = love.graphics.newFont("assets/KleeOne-SemiBold.ttf", 24)
 	SmallFont = love.graphics.newFont("assets/KleeOne-SemiBold.ttf", 18)
 
+	-- global sounds
 	CatSound1 = love.audio.newSource("assets/cat-meow.mp3", "static")
 	CatSound2 = love.audio.newSource("assets/cat-purr-meow.mp3", "static")
 	CatSound3 = love.audio.newSource("assets/funny-meow.mp3", "static")
 	BackgroundMusic = love.audio.newSource("assets/background_music.mp3", "stream")
 	BackgroundMusic:setLooping(true)
 	BackgroundMusic:setVolume(0.4)
-	--CatSound2:setVolume(0.6)
-	--CatSound3:setVolume(0.7)
 	
 	love.audio.play(BackgroundMusic)
 

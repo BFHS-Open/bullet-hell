@@ -1,5 +1,6 @@
 local Player = require("entities.player")
-local Enemy = require("entities.enemy")
+local StraightEnemy = require("entities.straight-enemy")
+local HomingEnemy = require("entities.homing-enemy")
 local Point2d = require("lib.point2d")
 local List = require("lib.list")
 local config = require("lib.config")
@@ -69,17 +70,17 @@ function Game:randomEnemy(position, target)
 	}
 
 	-- generate type
-	local type = ({
-		"homing",
-		"straight",
+	local Enemy = ({
+		HomingEnemy,
+		StraightEnemy,
 	})[love.math.random(2)]
 
-	if type == "straight" then
+	if Enemy == StraightEnemy then
 		data.angle = (target.position - data.position):angle() 
 			+ (-1/8 + 1/4 * love.math.random()) * math.pi * 2
 	end
 
-	return Enemy.new(type, data, self)
+	return Enemy.new(data, self)
 end
 
 local spawnTime = 1

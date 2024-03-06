@@ -16,7 +16,7 @@ function StraightEnemy.new(data, game)
 	e.alive = true
 
 	e.radius = 5
-	e.speed = utils.random(10, 50)
+	e.speed = utils.random(30, 50)
 
 	CatSound3:seek(0, "seconds")
 	love.audio.play(CatSound3)

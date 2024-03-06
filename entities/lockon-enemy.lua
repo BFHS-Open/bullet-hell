@@ -18,7 +18,7 @@ function LockonEnemy.new(data, game)
 
 	e.radius = 20
 	e.innerRadius = 5
-	e.speed = 20
+	e.speed = 25
 	e.acceleration = 1
 
 	CatSound2:seek(0, "seconds")

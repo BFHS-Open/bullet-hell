@@ -2,6 +2,7 @@ local Player = require("entities.player")
 local StraightEnemy = require("entities.straight-enemy")
 local HomingEnemy = require("entities.homing-enemy")
 local LockonEnemy = require("entities.lockon-enemy")
+local LaserEnemy = require("entities.laser-enemy")
 local Point2d = require("lib.point2d")
 local List = require("lib.list")
 local config = require("lib.config")
@@ -61,6 +62,13 @@ function Game:queueEnemy()
 	})
 end
 
+local enemies = {
+	HomingEnemy,
+	StraightEnemy,
+	LockonEnemy,
+	LaserEnemy
+}
+
 function Game:randomEnemy(position, target)
 	local data = {
 		position = position,
@@ -68,11 +76,7 @@ function Game:randomEnemy(position, target)
 	}
 
 	-- generate type
-	local Enemy = ({
-		HomingEnemy,
-		StraightEnemy,
-		LockonEnemy
-	})[love.math.random(3)]
+	local Enemy = enemies[love.math.random(#enemies)]
 
 	data.angle = (target.position - data.position):angle() 
 		+ (-1/8 + 1/4 * love.math.random()) * math.pi * 2
@@ -81,6 +85,7 @@ function Game:randomEnemy(position, target)
 end
 
 local spawnDelay = 1
+local targetSpawnInterval = 2
 
 function Game:update(dt)
 	if not self.player.alive then
@@ -94,7 +99,7 @@ function Game:update(dt)
 
 	while self.cooldown < 0 do
 		self.cooldown = self.cooldown + self.spawnInterval
-		self.spawnInterval = utils.lerp(self.spawnInterval, 2, .1)
+		self.spawnInterval = utils.lerp(self.spawnInterval, targetSpawnInterval, .1)
 		self:queueEnemy()
 	end
 

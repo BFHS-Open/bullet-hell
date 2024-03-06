@@ -21,6 +21,9 @@ function LockonEnemy.new(data, game)
 	e.speed = 20
 	e.acceleration = 1
 
+	CatSound2:seek(0, "seconds")
+	love.audio.play(CatSound2)
+
 	return e
 end
 

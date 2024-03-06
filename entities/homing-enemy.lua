@@ -20,6 +20,9 @@ function HomingEnemy.new(data, game)
 	e.speed = utils.random(10, 30)
 	e.angleSpeed = math.pi / 2 / (e.speed / 20)
 
+	CatSound1:seek(0, "seconds")
+	love.audio.play(CatSound1)
+		
 	return e
 end
 

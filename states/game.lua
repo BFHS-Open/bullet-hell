@@ -63,11 +63,27 @@ function Game:queueEnemy()
 end
 
 local enemies = {
-	HomingEnemy,
-	StraightEnemy,
-	LockonEnemy,
-	LaserEnemy
+	{value = HomingEnemy, weight = 1},
+	{value = StraightEnemy, weight = 10},
+	{value = LockonEnemy, weight = 1},
+	{value = LaserEnemy, weight = 1},
 }
+
+function weightedRandom(options)
+    local totalWeight = 0
+    for _, option in ipairs(options) do
+        totalWeight = totalWeight + option.weight
+    end
+
+    local rand = math.ceil(love.math.random() * totalWeight)
+
+    for _, option in ipairs(options) do
+        rand = rand - option.weight
+        if rand <= 0 then
+            return option.value
+        end
+    end
+end
 
 function Game:randomEnemy(position, target)
 	local data = {
@@ -76,7 +92,7 @@ function Game:randomEnemy(position, target)
 	}
 
 	-- generate type
-	local Enemy = enemies[love.math.random(#enemies)]
+	local Enemy = weightedRandom(enemies)
 
 	data.angle = (target.position - data.position):angle() 
 		+ (-1/8 + 1/4 * love.math.random()) * math.pi * 2

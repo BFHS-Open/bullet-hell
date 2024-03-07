@@ -9,6 +9,7 @@ local config = require("lib.config")
 local utils = require("lib.utils")
 local Sprite = require("lib.sprite")
 local Set = require("lib.set")
+local TextInput = require("ui.text-input")
 
 local function randomSpawnPosition()
 	if love.math.random(2) == 1 then
@@ -45,11 +46,17 @@ function Game.new(manager)
 	-- simulation time is tracked separately from global time
 	game.time = 0
 
+	game.textInput = TextInput.new()
+
 	return game
 end
 
-function Game:onPress(key)
-	if self.player.alive or key ~= "space" then
+function Game:onPress(...)
+	if self.player.alive then
+		return
+	end
+	local name = self.textInput:onPress(...)
+	if name == nil then
 		return
 	end
 	self.manager:moveTo("home", "game")
@@ -153,11 +160,14 @@ function Game:draw()
 	end
 
 	if self.player.alive then
-		-- UI
+		-- TODO: HH:MM:SS.SS
 		utils.drawText(string.format("%.2f", self.time), BigFont, 95, 95, -1, -1)
 	else
-		-- TODO: actual end screen
-		utils.drawText(string.format("Score: %.2f", self.time), BigFont, 50, 50, 0, 0)
+		utils.drawText(string.format("Score: %.2f", self.time), BigFont, 50, 40, 0, 0)
+		-- TODO: actual stats
+		utils.drawText(string.format("Top %d%%!", 0), BigFont, 50, 46, 0, 0)
+		utils.drawText("Name:", BigFont, 50, 54, 0, 0)
+		self.textInput:draw(Point2d.rect(50, 60), Point2d.rect(0, 0))
 	end
 end
 

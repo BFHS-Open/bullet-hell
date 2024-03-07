@@ -6,6 +6,8 @@ local manager
 local background
 
 function love.load()
+	love.keyboard.setKeyRepeat(true)
+
 	-- global fonts
 	BigFont = love.graphics.newFont("assets/fonts/KleeOne-SemiBold.ttf", 36)
 	RegularFont = love.graphics.newFont("assets/fonts/KleeOne-SemiBold.ttf", 24)
@@ -39,8 +41,5 @@ function love.draw()
 end
 
 function love.keypressed(key, scancode, isrepeat)
-	if isrepeat then
-		return
-	end
-	manager:onPress(key, scancode)
+	manager:onPress(key, scancode, isrepeat)
 end

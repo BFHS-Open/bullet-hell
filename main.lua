@@ -7,6 +7,10 @@ local background
 
 function love.load()
 	love.keyboard.setKeyRepeat(true)
+	love.filesystem.setIdentity("catnapped_in_space")
+
+	-- global for convenience
+	Time = 0
 
 	-- global fonts
 	BigFont = love.graphics.newFont("assets/fonts/KleeOne-SemiBold.ttf", 36)
@@ -24,10 +28,22 @@ function love.load()
 	love.audio.play(BackgroundMusic)
 
 	background = Sprite.new("/assets/images/background.png", config.dims * 12 / 7)
-	manager = Manager.new(Home)
+	local info = love.filesystem.getInfo("save.txt", "file")
+	local data = nil
+	if info then
+		local message
+		data, message = love.filesystem.read("save.txt")
+		if data == nil then
+			print(message)
+			love.event.quit()
+			return
+		end
+	end
+	manager = Manager.new(Home, data)
 end
 
 function love.update(dt)
+	Time = Time + dt
 	manager:update(dt)
 end
 
@@ -46,4 +62,16 @@ end
 
 function love.textinput(text)
 	manager:onText(text)
+end
+
+function love.quit()
+	if manager == nil then
+		return
+	end
+	local data = manager:save()
+	local success, message = love.filesystem.write("save.txt", data)
+	if not success then
+		print(data)
+		print(message)
+	end
 end

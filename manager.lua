@@ -1,6 +1,7 @@
 local Home = require("states.home")
 local Game = require("states.game")
 local Credits = require("states.credits")
+local Leaderboard = require("states.leaderboard")
 
 local Manager = {}
 Manager.__index = Manager
@@ -8,7 +9,8 @@ Manager.__index = Manager
 local states = {
 	home = Home,
 	game = Game,
-	credits = Credits
+	leaderboard = Leaderboard,
+	credits = Credits,
 }
 
 function Manager.new(State)
@@ -18,6 +20,9 @@ function Manager.new(State)
 	Time = 0
 
 	manager.state = State.new(manager)
+	manager.muted = false
+	-- TODO: save to file
+	manager.leaderboard = {}
 	return manager
 end
 
@@ -43,6 +48,15 @@ end
 
 function Manager:moveTo(state, ...)
 	self.state = states[state].new(self, ...)
+end
+
+function Manager:toggleSound()
+	self.muted = not self.muted
+	if self.muted then
+		love.audio.setVolume(0)
+	else
+		love.audio.setVolume(1)
+	end
 end
 
 return Manager

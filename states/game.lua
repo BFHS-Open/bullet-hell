@@ -60,7 +60,10 @@ function Game:onPress(...)
 		self.textInput:onPress(...)
 		return
 	end
-	-- TODO: save score
+	table.insert(self.manager.leaderboard, {
+		name = self.textInput.content,
+		time = self.time
+	})
 	self.manager:moveTo("home", "game")
 end
 

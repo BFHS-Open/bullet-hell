@@ -14,7 +14,7 @@ Jonathan, Austin, Joe, Thomas
 
 Eden
 
-Sound assets from nowhere because we don't have any yet
+Sound assets credits soon!
 ]]
 
 local Credits = {}

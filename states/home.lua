@@ -8,6 +8,13 @@ Home.__index = Home
 function Home.new(manager, from)
 	local home = setmetatable({}, Home)
 	home.manager = manager
+	home.soundButton = {
+		label = manager.muted and "Sound [Off]" or "Sound [On]",
+		onPress = function()
+			manager:toggleSound()
+			home.soundButton.label = manager.muted and "Sound [Off]" or "Sound [On]"
+		end
+	}
 	home.menu = Menu.new({
 		{
 			label = "Start",
@@ -19,12 +26,13 @@ function Home.new(manager, from)
 			end
 		},
 		{
-			label = "Difficulty",
-			onPress = function() end
-		},
-		{
 			label = "Leaderboard",
-			onPress = function() end
+			onPress = function(self, key)
+				if key ~= "space" then
+					return
+				end
+				home.manager:moveTo("leaderboard")
+			end
 		},
 		{
 			label = "Credits",
@@ -35,6 +43,7 @@ function Home.new(manager, from)
 				home.manager:moveTo("credits")
 			end
 		},
+		home.soundButton,
 		{
 			label = "Quit",
 			onPress = function(self, key)
@@ -46,8 +55,8 @@ function Home.new(manager, from)
 		}
 	}, ({
 		game = 1,
-		leaderboard = 3,
-		credits = 4
+		leaderboard = 2,
+		credits = 3
 	})[from])
 	return home
 end

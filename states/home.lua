@@ -68,10 +68,10 @@ function Home:update(dt)
 end
 
 function Home:draw()
-	title:draw(Point2d.rect(50, 20))
-	self.menu:draw(Point2d.rect(50, 50), Point2d.rect(0, 0))
+	title:draw(Point2d.rect(50, 22))
+	self.menu:draw(Point2d.rect(50, 60), Point2d.rect(0, 0))
 	love.graphics.setColor(1, 1, 1, 1/2)
-	utils.drawText("WASD to navigate, space to select", RegularFont, 50, 85, 0, 0)
+	utils.drawText("WASD to navigate, space to select", RegularFont, 50, 90, 0, 0)
 	love.graphics.setColor(1, 1, 1)
 end
 

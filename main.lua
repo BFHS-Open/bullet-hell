@@ -43,3 +43,7 @@ end
 function love.keypressed(key, scancode, isrepeat)
 	manager:onPress(key, scancode, isrepeat)
 end
+
+function love.textinput(text)
+	manager:onText(text)
+end

@@ -55,11 +55,20 @@ function Game:onPress(...)
 	if self.player.alive then
 		return
 	end
-	local name = self.textInput:onPress(...)
-	if name == nil then
+	local key = ...
+	if key ~= "return" then
+		self.textInput:onPress(...)
 		return
 	end
+	-- TODO: save score
 	self.manager:moveTo("home", "game")
+end
+
+function Game:onText(...)
+	if self.player.alive then
+		return
+	end
+	self.textInput:onText(...)
 end
 
 function Game:queueEnemy()
@@ -167,7 +176,13 @@ function Game:draw()
 		-- TODO: actual stats
 		utils.drawText(string.format("Top %d%%!", 0), BigFont, 50, 46, 0, 0)
 		utils.drawText("Name:", BigFont, 50, 54, 0, 0)
+		love.graphics.setColor(3/4, 3/4, 1)
 		self.textInput:draw(Point2d.rect(50, 60), Point2d.rect(0, 0))
+		if self.textInput.content ~= "" then
+			love.graphics.setColor(1, 1, 1, 1/2)
+			utils.drawText("enter to confirm", RegularFont, 50, 70, 0, 0)
+		end
+		love.graphics.setColor(1, 1, 1)
 	end
 end
 

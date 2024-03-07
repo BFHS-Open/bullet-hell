@@ -34,6 +34,13 @@ function Manager:onPress(...)
 	self.state:onPress(...)
 end
 
+function Manager:onText(...)
+	if self.state.onText == nil then
+		return
+	end
+	self.state:onText(...)
+end
+
 function Manager:moveTo(state, ...)
 	self.state = states[state].new(self, ...)
 end

@@ -29,6 +29,9 @@ function Manager:serialize()
 	local width, height = love.window.getMode()
 	local data = string.format("%d,%d,%d\n", self.muted and 1 or 0, width, height)
 	for _,score in ipairs(self.scores) do
+		if score.name == nil then
+			score.name = ""
+		end
 		data = data .. string.format("%d", score.timestamp) .. ","
 			.. string.format("%f", score.time) .. "\n"
 			.. ":" .. score.name .. "\n"

@@ -5,7 +5,7 @@ local utils  = require("lib.utils")
 local HomingEnemy = {}
 HomingEnemy.__index = HomingEnemy
 
-local sprite = Sprite.new("/assets/images/rocket.png", Point2d.rect(10, 10))
+local sprite = Sprite.new("/assets/images/rocket.png", Point2d.rect(20, 20), Point2d.rect(-33, -70))
 
 function HomingEnemy.new(data, game)
 	local e = setmetatable(data, HomingEnemy)

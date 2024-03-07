@@ -64,13 +64,13 @@ function LaserEnemy:draw()
 	local span = config.dims:length()
 	if self.stage == 0 then
 		local charge = math.min((self.game.time - self.stageTime) / activateDelay, 1)
-		love.graphics.setColor(1, 0, 0, 1/4)
+		utils.setRed(1/4)
 		love.graphics.rectangle("fill", -span, -self.radius, span * 2, self.radius * 2)
-		love.graphics.setColor(1, 0, 0, 1/2)
+		utils.setRed(1/2)
 		love.graphics.rectangle("fill", -span, -self.radius * charge, span * 2, self.radius * charge * 2)
 	else
 		local fadeOut = self.stage == 1 and 1 or 1 - (self.game.time - self.stageTime) / fadeLength
-		love.graphics.setColor(1, 0, 0)
+		utils.setRed()
 		love.graphics.rectangle("fill", -span, -self.radius * fadeOut, span * 2, self.radius * fadeOut * 2)
 	end
 	love.graphics.pop()

@@ -1,12 +1,14 @@
 local utils = require("lib.utils")
+local Point2d = require("lib.point2d")
 
 local Sprite = {}
 Sprite.__index = Sprite
 
-function Sprite.new(path, dims)
+function Sprite.new(path, dims, origin)
 	local sprite = setmetatable({}, Sprite)
 	sprite.image = love.graphics.newImage(path)
 	sprite.dims = dims
+	sprite.origin = origin or Point2d.rect(0, 0)
 	return sprite
 end
 
@@ -25,8 +27,8 @@ function Sprite:draw(pos, scale, alpha, angle)
 		angle,
 		windowDims.x / imageWidth * scale,
 		windowDims.y / imageHeight * scale,
-		imageWidth / 2,
-		imageHeight / 2
+		imageWidth / 2 + self.origin.x,
+		imageHeight / 2 + self.origin.y
 	)
 	love.graphics.setColor(1, 1, 1)
 end

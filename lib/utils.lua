@@ -43,7 +43,7 @@ end
 function utils.drawHitbox(position, radius)
 	local x, y = utils.windowFromWorld(position):unpack()
 	local rx, ry = utils.windowFromWorld(Point2d.rect(radius, radius)):unpack()
-	love.graphics.setColor(1, 0, 0)
+	utils.setRed()
 	love.graphics.ellipse("line", x, y, rx, ry)
 	love.graphics.setColor(1, 1, 1)
 end
@@ -54,6 +54,11 @@ function utils.moveInBounds(position, padding)
 		utils.clamp(x, padding, config.dims.x - padding),
 		utils.clamp(y, padding, config.dims.y - padding)
 	)
+end
+
+function utils.setRed(alpha)
+	alpha = alpha or 1
+	love.graphics.setColor(.8, .1, .25, alpha)
 end
 
 return utils

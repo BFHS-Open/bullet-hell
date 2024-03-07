@@ -5,7 +5,7 @@ local utils  = require("lib.utils")
 local LockonEnemy = {}
 LockonEnemy.__index = LockonEnemy
 
-local sprite = Sprite.new("/assets/images/ufo.png", Point2d.rect(20, 20))
+local sprite = Sprite.new("/assets/images/ufo.png", Point2d.rect(20, 20), Point2d.rect(-10, 400))
 
 function LockonEnemy.new(data, game)
 	local e = setmetatable(data, LockonEnemy)
@@ -63,29 +63,35 @@ function LockonEnemy:update(dt)
 end
 
 function LockonEnemy:draw()
+	local x, y = utils.windowFromWorld(self.position):unpack()
+	local rx, ry = utils.windowFromWorld(Point2d.rect(self.radius, self.radius)):unpack()
+	local irx, iry = utils.windowFromWorld(Point2d.rect(self.innerRadius, self.innerRadius)):unpack()
 	if self.stage >= 1 then
-		local x, y = utils.windowFromWorld(self.position):unpack()
-		local rx, ry = utils.windowFromWorld(Point2d.rect(self.radius, self.radius)):unpack()
 		love.graphics.push("all")
 		if self.stage == 1 then
 			local charge = (self.game.time - self.stageTime) / activateDelay
-			love.graphics.setColor(1, 0, 0, 1/4)
+			utils.setRed(1/4)
 			love.graphics.ellipse("fill", x, y, rx, ry)
-			love.graphics.setColor(1, 0, 0, 1/2)
-			love.graphics.ellipse("fill", x, y, rx * charge, ry * charge)
+			utils.setRed(1/2)
+			love.graphics.ellipse("fill", x, y, irx + (rx - irx) * charge, iry + (ry - iry) * charge)
 		else
 			local fadeOut = (self.game.time - self.stageTime) / fadeLength
-			love.graphics.setColor(1, 0, 0, 1 - fadeOut)
+			utils.setRed(1 - fadeOut)
 			love.graphics.ellipse("fill", x, y, rx, ry)
 		end
 		love.graphics.pop()
-	end
-	if self.stage < 2 then
-		local fadeIn = self.stage == 1 and 1 or (self.game.time - self.stageTime) / enterTime
-		self.sprite:draw(self.position, 1, fadeIn / 2)
+	else
+		utils.setRed(1/4)
+		love.graphics.ellipse("fill", x, y, irx, iry)
+		love.graphics.setColor(1, 1, 1)
 		if self.game.showHitboxes then
 			utils.drawHitbox(self.position, self.innerRadius)
 		end
+	end
+	if self.stage < 2 then
+		local fadeIn = self.stage == 1 and 1 or math.min((self.game.time - self.stageTime) / enterTime, 1)
+		local lift = self.stage == 0 and 0 or (self.game.time - self.stageTime) / activateDelay
+		self.sprite:draw(self.position + Point2d.rect(0, -lift * 20), 1, fadeIn / 2 * math.max(1 - lift * 2, 0))
 	end
 end
 

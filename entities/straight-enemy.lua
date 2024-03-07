@@ -5,7 +5,7 @@ local utils  = require("lib.utils")
 local StraightEnemy = {}
 StraightEnemy.__index = StraightEnemy
 
-local sprite = Sprite.new("/assets/images/asteroid.png", Point2d.rect(10, 10))
+local sprite = Sprite.new("/assets/images/asteroid.png", Point2d.rect(20, 20), Point2d.rect(10, 10))
 
 function StraightEnemy.new(data, game)
 	local e = setmetatable(data, StraightEnemy)

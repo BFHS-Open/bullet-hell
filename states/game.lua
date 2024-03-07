@@ -112,9 +112,6 @@ function Game:randomEnemy(position, target)
 	-- generate type
 	local Enemy = weightedRandom(enemies)
 
-	data.angle = (target.position - data.position):angle()
-		+ (-1/8 + 1/4 * love.math.random()) * math.pi * 2
-
 	return Enemy.new(data, self)
 end
 

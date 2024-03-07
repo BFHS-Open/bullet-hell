@@ -18,6 +18,8 @@ function HomingEnemy.new(data, game)
 
 	e.radius = 3
 	e.speed = utils.random(10, 30)
+	e.angle = (e.target.position - e.position):angle()
+		+ (-1/8 + 1/4 * love.math.random()) * math.pi * 2
 	e.angleSpeed = math.pi / 2 / (e.speed / 20)
 
 	local sound = SoundCatMeow:clone()

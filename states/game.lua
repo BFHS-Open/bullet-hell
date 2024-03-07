@@ -42,8 +42,8 @@ function Game.new(manager)
 	game.manager = manager
 	game.player = Player.new(Point2d.rect(50, 50), game)
 	game.enemies = Set.new()
-	game.spawnInterval = .1
-	game.cooldown = 0
+	game.spawnInterval = 2
+	game.cooldown = 2
 	game.queue = List.new()
 	-- simulation time is tracked separately from global time
 	game.time = 0
@@ -121,7 +121,7 @@ function Game:randomEnemy(position, target)
 end
 
 local spawnDelay = 1
-local targetSpawnInterval = 2
+local targetSpawnInterval = .5
 
 function Game:update(dt)
 	if self.state == 0 then
@@ -132,7 +132,7 @@ function Game:update(dt)
 
 		while self.cooldown < 0 do
 			self.cooldown = self.cooldown + self.spawnInterval
-			self.spawnInterval = utils.lerp(self.spawnInterval, targetSpawnInterval, .1)
+			self.spawnInterval = utils.lerp(self.spawnInterval, targetSpawnInterval, .05)
 			self:queueEnemy()
 		end
 

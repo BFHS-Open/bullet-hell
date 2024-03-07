@@ -28,19 +28,26 @@ function Leaderboard:draw()
 		utils.drawText(entry.name, RegularFont, 51, 20 + 5 * i, 1, 0)
 	end
 	love.graphics.setColor(1, 1, 1, 1/2)
-	utils.drawText("space to return", RegularFont, 50, 90, 0, 0)
+	utils.drawText("scroll to navigate, space to return", RegularFont, 50, 90, 0, 0)
 	love.graphics.setColor(1, 1, 1)
 end
 
+function Leaderboard:scroll(x)
+	self.offset = utils.clamp(self.offset + x, 0, math.max(#self.manager.scores - rows, 0))
+end
+
 function Leaderboard:onPress(key)
-	if key ~= "space" then
-		return
+	if key == "w" then
+		self:scroll(-1)
+	elseif key == "s" then
+		self:scroll(1)
+	elseif key == "space" then
+		self.manager:moveTo("home", "leaderboard")
 	end
-	self.manager:moveTo("home", "leaderboard")
 end
 
 function Leaderboard:onWheel(_, y)
-	self.offset = utils.clamp(self.offset - y, 0, math.max(#self.manager.scores - rows, 0))
+	self:scroll(-y)
 end
 
 return Leaderboard

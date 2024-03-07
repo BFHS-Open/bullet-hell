@@ -69,20 +69,20 @@ local enemies = {
 	{value = LaserEnemy, weight = 1},
 }
 
-function weightedRandom(options)
-    local totalWeight = 0
-    for _, option in ipairs(options) do
-        totalWeight = totalWeight + option.weight
-    end
+local function weightedRandom(options)
+	local totalWeight = 0
+	for _, option in ipairs(options) do
+		totalWeight = totalWeight + option.weight
+	end
 
-    local rand = math.ceil(love.math.random() * totalWeight)
+	local rand = math.ceil(love.math.random() * totalWeight)
 
-    for _, option in ipairs(options) do
-        rand = rand - option.weight
-        if rand <= 0 then
-            return option.value
-        end
-    end
+	for _, option in ipairs(options) do
+		rand = rand - option.weight
+		if rand <= 0 then
+			return option.value
+		end
+	end
 end
 
 function Game:randomEnemy(position, target)
@@ -94,7 +94,7 @@ function Game:randomEnemy(position, target)
 	-- generate type
 	local Enemy = weightedRandom(enemies)
 
-	data.angle = (target.position - data.position):angle() 
+	data.angle = (target.position - data.position):angle()
 		+ (-1/8 + 1/4 * love.math.random()) * math.pi * 2
 
 	return Enemy.new(data, self)

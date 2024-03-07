@@ -8,17 +8,16 @@ Player.__index = Player
 local radius = 4
 local sprite = Sprite.new("/assets/images/player.png", Point2d.rect(10, 10))
 
-function Player.new(position)
+function Player.new(position, game)
 	local p = setmetatable({}, Player)
 
 	p.position = position
-
 	p.radius = radius
+	p.speed = 80
 
 	p.sprite = sprite
 
-	p.speed = 80
-
+	p.game = game
 	p.alive = true
 
 	return p
@@ -26,6 +25,9 @@ end
 
 function Player:draw()
 	self.sprite:draw(self.position)
+	if self.game.showHitboxes then
+		utils.drawHitbox(self.position, self.radius)
+	end
 end
 
 local function handleInput(self, dt)

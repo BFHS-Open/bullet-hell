@@ -83,6 +83,9 @@ function LockonEnemy:draw()
 	if self.stage < 2 then
 		local fadeIn = self.stage == 1 and 1 or (self.game.time - self.stageTime) / enterTime
 		self.sprite:draw(self.position, 1, fadeIn / 2)
+		if self.game.showHitboxes then
+			utils.drawHitbox(self.position, self.innerRadius)
+		end
 	end
 end
 

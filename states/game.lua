@@ -40,7 +40,7 @@ function Game.new(manager)
 	game.state = 0
 
 	game.manager = manager
-	game.player = Player.new(Point2d.rect(50, 50))
+	game.player = Player.new(Point2d.rect(50, 50), game)
 	game.enemies = Set.new()
 	game.spawnInterval = .1
 	game.cooldown = 0
@@ -50,14 +50,19 @@ function Game.new(manager)
 
 	game.textInput = TextInput.new()
 
+	game.showHitboxes = false
+
 	return game
 end
 
 function Game:onPress(...)
+	local key = ...
+	if key == "`" then
+		self.showHitboxes = not self.showHitboxes
+	end
 	if self.player.alive then
 		return
 	end
-	local key = ...
 	if key ~= "return" then
 		self.textInput:onPress(...)
 		return

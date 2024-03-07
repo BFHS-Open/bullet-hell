@@ -48,6 +48,9 @@ end
 function HomingEnemy:draw()
 	local fadeIn = math.max(1 - (self.game.time - self.spawnTime) / enterTime, 0)
 	self.sprite:draw(self.position, 1, 1 - fadeIn, self.angle + math.pi / 2)
+	if self.game.showHitboxes then
+		utils.drawHitbox(self.position, self.radius)
+	end
 end
 
 return HomingEnemy

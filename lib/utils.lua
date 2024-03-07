@@ -40,6 +40,14 @@ function utils.drawText(text, font, x, y, horz, vert)
 	)
 end
 
+function utils.drawHitbox(position, radius)
+	local x, y = utils.windowFromWorld(position):unpack()
+	local rx, ry = utils.windowFromWorld(Point2d.rect(radius, radius)):unpack()
+	love.graphics.setColor(1, 0, 0)
+	love.graphics.ellipse("line", x, y, rx, ry)
+	love.graphics.setColor(1, 1, 1)
+end
+
 function utils.moveInBounds(position, padding)
 	local x, y = position:unpack()
 	return Point2d.rect(

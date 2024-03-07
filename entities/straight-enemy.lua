@@ -46,6 +46,9 @@ end
 function StraightEnemy:draw()
 	local fadeIn = math.max(1 - (self.game.time - self.spawnTime) / enterTime, 0)
 	self.sprite:draw(self.position, 1, 1 - fadeIn)
+	if self.game.showHitboxes then
+		utils.drawHitbox(self.position, self.radius)
+	end
 end
 
 return StraightEnemy

@@ -18,8 +18,8 @@ function StraightEnemy.new(data, game)
 	e.radius = 5
 	e.speed = utils.random(30, 50)
 
-	SoundCatFunny:seek(0, "seconds")
-	love.audio.play(SoundCatFunny)
+	local sound = SoundCatFunny:clone()
+	love.audio.play(sound)
 
 	return e
 end

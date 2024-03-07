@@ -20,8 +20,8 @@ function HomingEnemy.new(data, game)
 	e.speed = utils.random(10, 30)
 	e.angleSpeed = math.pi / 2 / (e.speed / 20)
 
-	SoundCatMeow:seek(0, "seconds")
-	love.audio.play(SoundCatMeow)
+	local sound = SoundCatMeow:clone()
+	love.audio.play(sound)
 		
 	return e
 end

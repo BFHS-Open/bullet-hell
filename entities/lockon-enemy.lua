@@ -21,8 +21,8 @@ function LockonEnemy.new(data, game)
 	e.speed = 25
 	e.acceleration = 1
 
-	SoundCatPurr:seek(0, "seconds")
-	love.audio.play(SoundCatPurr)
+	local sound = SoundCatPurr:clone()
+	love.audio.play(sound)
 
 	return e
 end

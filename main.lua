@@ -64,6 +64,10 @@ function love.textinput(text)
 	manager:onText(text)
 end
 
+function love.wheelmoved(x, y)
+	manager:onWheel(x, y)
+end
+
 function love.quit()
 	if manager == nil then
 		return

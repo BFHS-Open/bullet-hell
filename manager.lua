@@ -107,6 +107,13 @@ function Manager:onText(...)
 	self.state:onText(...)
 end
 
+function Manager:onWheel (...)
+	if self.state.onWheel == nil then
+		return
+	end
+	self.state:onWheel(...)
+end
+
 function Manager:moveTo(state, ...)
 	self.state = states[state].new(self, ...)
 end

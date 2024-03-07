@@ -1,9 +1,12 @@
 local utils = require("lib.utils")
 local Menu = require("ui.menu")
 local Point2d = require("lib.point2d")
+local Sprite  = require("lib.sprite")
 
 local Home = {}
 Home.__index = Home
+
+local title = Sprite.new("assets/images/title.png", Point2d.rect(336, 157) / 5)
 
 function Home.new(manager, from)
 	local home = setmetatable({}, Home)
@@ -65,7 +68,7 @@ function Home:update(dt)
 end
 
 function Home:draw()
-	utils.drawText("Bullet Hell", BigFont, 50, 25, 0, 0)
+	title:draw(Point2d.rect(50, 20))
 	self.menu:draw(Point2d.rect(50, 50), Point2d.rect(0, 0))
 	love.graphics.setColor(1, 1, 1, 1/2)
 	utils.drawText("WASD to navigate, space to select", RegularFont, 50, 85, 0, 0)

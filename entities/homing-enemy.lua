@@ -5,7 +5,7 @@ local utils  = require("lib.utils")
 local HomingEnemy = {}
 HomingEnemy.__index = HomingEnemy
 
-local sprite = Sprite.new("/assets/images/homing.png", Point2d.rect(10, 10))
+local sprite = Sprite.new("/assets/images/rocket.png", Point2d.rect(10, 10))
 
 function HomingEnemy.new(data, game)
 	local e = setmetatable(data, HomingEnemy)
@@ -47,7 +47,7 @@ end
 
 function HomingEnemy:draw()
 	local fadeIn = math.max(1 - (self.game.time - self.spawnTime) / enterTime, 0)
-	self.sprite:draw(self.position, 1, 1 - fadeIn, self.angle)
+	self.sprite:draw(self.position, 1, 1 - fadeIn, self.angle + math.pi / 2)
 end
 
 return HomingEnemy

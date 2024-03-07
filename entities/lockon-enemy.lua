@@ -5,7 +5,7 @@ local utils  = require("lib.utils")
 local LockonEnemy = {}
 LockonEnemy.__index = LockonEnemy
 
-local sprite = Sprite.new("/assets/images/lockon.png", Point2d.rect(20, 20))
+local sprite = Sprite.new("/assets/images/ufo.png", Point2d.rect(20, 20))
 
 function LockonEnemy.new(data, game)
 	local e = setmetatable(data, LockonEnemy)

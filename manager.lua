@@ -22,7 +22,7 @@ function Manager.new(State)
 	manager.state = State.new(manager)
 	manager.muted = false
 	-- TODO: save to file
-	manager.leaderboard = {}
+	manager.scores = {}
 	return manager
 end
 

@@ -37,6 +37,8 @@ Game.__index = Game
 function Game.new(manager)
 	local game = setmetatable({}, Game)
 
+	game.state = 0
+
 	game.manager = manager
 	game.player = Player.new(Point2d.rect(50, 50))
 	game.enemies = Set.new()
@@ -60,10 +62,7 @@ function Game:onPress(...)
 		self.textInput:onPress(...)
 		return
 	end
-	table.insert(self.manager.leaderboard, {
-		name = self.textInput.content,
-		time = self.time
-	})
+	self.score.name = self.textInput.content:match("^%s*(.-)%s*$")
 	self.manager:moveTo("home", "game")
 end
 
@@ -123,38 +122,75 @@ local spawnDelay = 1
 local targetSpawnInterval = 2
 
 function Game:update(dt)
-	if not self.player.alive then
-		return
-	end
+	if self.state == 0 then
+		self.time = self.time + dt
 
-	self.time = self.time + dt
+		-- queue spawns
+		self.cooldown = self.cooldown - dt
 
-	-- queue spawns
-	self.cooldown = self.cooldown - dt
-
-	while self.cooldown < 0 do
-		self.cooldown = self.cooldown + self.spawnInterval
-		self.spawnInterval = utils.lerp(self.spawnInterval, targetSpawnInterval, .1)
-		self:queueEnemy()
-	end
-
-	-- resolve spawns
-	while self.queue:len() ~= 0 and (self.time - self.queue:front().time > spawnDelay) do
-		self.enemies:insert(self:randomEnemy(self.queue:popFront().position, self.player))
-	end
-
-	-- update all enemies
-	for enemy in self.enemies:pairs() do
-		enemy:update(dt)
-
-		-- delete if dead
-		if not enemy.alive then
-			-- setting to nil while traversing is allowed
-			self.enemies:remove(enemy)
+		while self.cooldown < 0 do
+			self.cooldown = self.cooldown + self.spawnInterval
+			self.spawnInterval = utils.lerp(self.spawnInterval, targetSpawnInterval, .1)
+			self:queueEnemy()
 		end
-	end
 
-	self.player:update(dt)
+		-- resolve spawns
+		while self.queue:len() ~= 0 and (self.time - self.queue:front().time > spawnDelay) do
+			self.enemies:insert(self:randomEnemy(self.queue:popFront().position, self.player))
+		end
+
+		-- update all enemies
+		for enemy in self.enemies:pairs() do
+			enemy:update(dt)
+
+			-- delete if dead
+			if not enemy.alive then
+				-- setting to nil while traversing is allowed
+				self.enemies:remove(enemy)
+			end
+		end
+
+		self.player:update(dt)
+
+		if self.player.alive then
+			return
+		end
+		self.score = {
+			time = self.time,
+			timestamp = os.time(),
+		}
+		local scores = self.manager.scores
+		table.insert(scores, self.score)
+		table.sort(
+			scores,
+			function (a, b)
+				if a.time > b.time then
+					return true
+				elseif a.time < b.time then
+					return false
+				end
+				if a.timestamp < b.timestamp then
+					return true
+				end
+				return false
+			end
+		)
+		local rank
+		for i,v in ipairs(scores) do
+			if v == self.score then
+				rank = i
+				break
+			end
+		end
+		if rank == 1 then
+			self.message = "NEW HIGH SCORE!!!"
+		elseif (rank - 1) / #scores < 1 / 4 then
+			self.message = string.format("Rank %d of %d!!", rank, #scores)
+		else
+			self.message = string.format("Top %d%%!", math.ceil(rank / #scores * 100))
+		end
+		self.state = 1
+	end
 end
 
 function Game:draw()
@@ -171,13 +207,12 @@ function Game:draw()
 		warning:draw(utils.moveInBounds(item.position, 5), 1 + fadeIn, (1 - fadeIn) * (1 - fadeOut))
 	end
 
-	if self.player.alive then
+	if self.state == 0 then
 		-- TODO: HH:MM:SS.SS
 		utils.drawText(string.format("%.2f", self.time), BigFont, 95, 95, -1, -1)
 	else
 		utils.drawText(string.format("Score: %.2f", self.time), BigFont, 50, 40, 0, 0)
-		-- TODO: actual stats
-		utils.drawText(string.format("Top %d%%!", 0), BigFont, 50, 46, 0, 0)
+		utils.drawText(self.message, BigFont, 50, 46, 0, 0)
 		utils.drawText("Name:", BigFont, 50, 54, 0, 0)
 		love.graphics.setColor(3/4, 3/4, 1)
 		self.textInput:draw(Point2d.rect(50, 60), Point2d.rect(0, 0))

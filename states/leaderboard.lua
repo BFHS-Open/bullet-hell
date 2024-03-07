@@ -29,6 +29,9 @@ function Leaderboard:draw()
 	local scores = self.manager.scores
 	for i = 1, rows  do
 		local entry = scores[self.offset + i]
+		if entry == nil then
+			break
+		end
 		utils.drawText(utils.clockFromSeconds(entry.time), RegularFont, 39, 20 + 5 * i, -1, 0)
 		utils.drawText(entry.name, RegularFont, 41, 20 + 5 * i, 1, 0)
 	end

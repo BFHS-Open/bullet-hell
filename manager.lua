@@ -31,7 +31,7 @@ function Manager:serialize()
 	for _,score in ipairs(self.scores) do
 		data = data .. string.format("%d", score.timestamp) .. ","
 			.. string.format("%f", score.time) .. "\n"
-			.. score.name .. "\n"
+			.. ":" .. score.name .. "\n"
 	end
 	return data
 end
@@ -77,7 +77,7 @@ function Manager:deserialize(data)
 					end
 				end
 			else
-				score.name = line
+				score.name = line:sub(2)
 				table.insert(self.scores, score)
 				score = {}
 			end

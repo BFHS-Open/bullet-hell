@@ -15,7 +15,6 @@ function love.load()
 	-- global fonts
 	BigFont = love.graphics.newFont("assets/fonts/KleeOne-SemiBold.ttf", 36)
 	RegularFont = love.graphics.newFont("assets/fonts/KleeOne-SemiBold.ttf", 24)
-	SmallFont = love.graphics.newFont("assets/fonts/KleeOne-SemiBold.ttf", 18)
 
 	-- global sounds
 	SoundCatMeow = love.audio.newSource("assets/sounds/cat-meow.mp3", "static")

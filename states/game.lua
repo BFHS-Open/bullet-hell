@@ -43,7 +43,7 @@ function Game.new(manager)
 	game.player = Player.new(Point2d.rect(50, 50), game)
 	game.enemies = Set.new()
 	game.spawnInterval = 2
-	game.cooldown = 2
+	game.cooldown = 1
 	game.queue = List.new()
 	-- simulation time is tracked separately from global time
 	game.time = 0

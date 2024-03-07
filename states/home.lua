@@ -7,6 +7,7 @@ local Home = {}
 Home.__index = Home
 
 local title = Sprite.new("assets/images/title.png", Point2d.rect(336, 157) / 5)
+local panel = Sprite.new("assets/images/panel.png", Point2d.rect(60, 60), Point2d.rect(0, -10))
 
 function Home.new(manager, from)
 	local home = setmetatable({}, Home)
@@ -68,7 +69,8 @@ function Home:update(dt)
 end
 
 function Home:draw()
-	title:draw(Point2d.rect(50, 22))
+	panel:draw(Point2d.rect(50, 60), 1, 3/4)
+	title:draw(Point2d.rect(50, 22), 1, 1, math.sin(Time / 2) / 20)
 	self.menu:draw(Point2d.rect(50, 60), Point2d.rect(0, 0))
 	love.graphics.setColor(1, 1, 1, 1/2)
 	utils.drawText("WASD to navigate, space to select", RegularFont, 50, 90, 0, 0)

@@ -24,13 +24,12 @@ end
 local spacing = 8
 
 function Menu:draw(pos, align)
-	-- TODO: make menu look nicer
 	local y = pos.y - (1 - align.y) / 2 * spacing * #self.buttons
 	for i,button in ipairs(self.buttons) do
 		utils.drawText(
 			button.label,
 			RegularFont,
-			pos.x, y + i * spacing,
+			pos.x, y + (i - 1/2) * spacing,
 			align.x, align.y
 		)
 	end
@@ -38,7 +37,7 @@ function Menu:draw(pos, align)
 	local textHeight = RegularFont:getHeight()
 	local rectPos = utils.windowFromWorld(Point2d.rect(
 		pos.x,
-		y + self.selected * spacing
+		y + (self.selected - 1/2) * spacing
 	)) - Point2d.rect(
 		textWidth * (1 - align.x) / 2,
 		textHeight * (1 - align.y) / 2

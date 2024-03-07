@@ -12,8 +12,8 @@ function LockonEnemy.new(data, game)
 
 	e.sprite = sprite
 	e.game = game
-	e.spawnTime = game.time
-	e.activated = false
+	e.stageTime = game.time
+	e.stage = 0
 	e.alive = true
 
 	e.radius = 20
@@ -29,18 +29,19 @@ end
 
 local enterTime = 1/4
 local activateDelay = 1
+local fadeLength = 1/4
 
 function LockonEnemy:update(dt)
-	if not self.activated then
+	if self.stage == 0 then
 		local oldSpeed = self.speed
 		self.speed = self.speed + dt * self.acceleration
 		self.position = self.position:goTo(dt * (self.speed + oldSpeed) / 2, self.target.position)
 		if (self.position - self.target.position):length() < self.innerRadius + self.target.radius then
-			self.activated = true
-			self.activateTime = self.game.time
+			self.stage = 1
+			self.stageTime = self.game.time
 		end
-	else
-		if self.game.time - self.activateTime < activateDelay then
+	elseif self.stage == 1 then
+		if self.game.time - self.stageTime < activateDelay then
 			return
 		end
 		for other in self.game.enemies:pairs() do
@@ -51,21 +52,38 @@ function LockonEnemy:update(dt)
 		if (self.position - self.target.position):length() < self.radius + self.target.radius then
 			self.target.alive = false
 		end
+		self.stage = 2
+		self.stageTime = self.game.time
+	else
+		if self.game.time - self.stageTime < fadeLength then
+			return
+		end
 		self.alive = false
 	end
 end
 
 function LockonEnemy:draw()
-	if self.activated then
+	if self.stage >= 1 then
 		local x, y = utils.windowFromWorld(self.position):unpack()
 		local rx, ry = utils.windowFromWorld(Point2d.rect(self.radius, self.radius)):unpack()
-		local charge = (self.game.time - self.activateTime) / activateDelay
-		love.graphics.setColor(1, 0, 0, charge ^ 4)
-		love.graphics.ellipse("fill", x, y, rx, ry)
-		love.graphics.setColor(1, 1, 1)
+		love.graphics.push("all")
+		if self.stage == 1 then
+			local charge = (self.game.time - self.stageTime) / activateDelay
+			love.graphics.setColor(1, 0, 0, 1/4)
+			love.graphics.ellipse("fill", x, y, rx, ry)
+			love.graphics.setColor(1, 0, 0, 1/2)
+			love.graphics.ellipse("fill", x, y, rx * charge, ry * charge)
+		else
+			local fadeOut = (self.game.time - self.stageTime) / fadeLength
+			love.graphics.setColor(1, 0, 0, 1 - fadeOut)
+			love.graphics.ellipse("fill", x, y, rx, ry)
+		end
+		love.graphics.pop()
 	end
-	local fadeIn = math.max(1 - (self.game.time - self.spawnTime) / enterTime, 0)
-	self.sprite:draw(self.position, 1, (1 - fadeIn) / 2)
+	if self.stage < 2 then
+		local fadeIn = self.stage == 1 and 1 or (self.game.time - self.stageTime) / enterTime
+		self.sprite:draw(self.position, 1, fadeIn / 2)
+	end
 end
 
 return LockonEnemy

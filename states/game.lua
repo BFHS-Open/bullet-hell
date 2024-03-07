@@ -82,7 +82,7 @@ end
 
 local enemies = {
 	{value = HomingEnemy, weight = 1},
-	{value = StraightEnemy, weight = 10},
+	{value = StraightEnemy, weight = 2},
 	{value = LockonEnemy, weight = 1},
 	{value = LaserEnemy, weight = 1},
 }

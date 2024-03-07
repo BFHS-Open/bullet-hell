@@ -15,6 +15,21 @@ function utils.random(min, max)
 	return min + love.math.random() * (max - min)
 end
 
+function utils.clockFromSeconds(t)
+	local s = t % 60
+	t = math.floor(t / 60)
+	if t == 0 then
+		return string.format("%.2f", s)
+	end
+	local m = t % 60
+	t = math.floor(t / 60)
+	if t == 0 then
+		return string.format("%d:%05.2f", m, s)
+	end
+	local h = t
+	return string.format("%d:%02d:%05.2f", h, m, s)
+end
+
 function utils.worldFromWindow(v)
 	local windowWidth, windowHeight = love.window:getMode()
 	return v:scale(config.dims.x / windowWidth, config.dims.y / windowHeight)

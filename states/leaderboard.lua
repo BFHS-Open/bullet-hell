@@ -20,7 +20,7 @@ function Leaderboard:draw()
 	love.graphics.setColor(1, 1, 1)
 	local scores = self.manager.scores
 	for i,entry in ipairs(scores) do
-		utils.drawText(string.format("%.2f", entry.time), RegularFont, 49, 20 + 5 * i, -1, 0)
+		utils.drawText(utils.clockFromSeconds(entry.time), RegularFont, 49, 20 + 5 * i, -1, 0)
 		utils.drawText(entry.name, RegularFont, 51, 20 + 5 * i, 1, 0)
 	end
 	love.graphics.setColor(1, 1, 1, 1/2)

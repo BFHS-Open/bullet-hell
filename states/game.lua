@@ -210,10 +210,15 @@ function Game:draw()
 	end
 
 	if self.state == 0 then
-		-- TODO: HH:MM:SS.SS
-		utils.drawText(string.format("%.2f", self.time), BigFont, 95, 95, -1, -1)
+		utils.drawText(utils.clockFromSeconds(self.time), BigFont, 95, 95, -1, -1)
 	else
-		utils.drawText(string.format("Score: %.2f", self.time), BigFont, 50, 40, 0, 0)
+		local result
+		if self.time < 60 then
+			result = string.format("Survived for %.2f seconds", self.time)
+		else
+			result = "Survived for " .. utils.clockFromSeconds(self.time)
+		end
+		utils.drawText(result, BigFont, 50, 40, 0, 0)
 		utils.drawText(self.message, BigFont, 50, 46, 0, 0)
 		utils.drawText("Name:", BigFont, 50, 54, 0, 0)
 		love.graphics.setColor(3/4, 3/4, 1)

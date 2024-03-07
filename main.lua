@@ -7,21 +7,21 @@ local background
 
 function love.load()
 	-- global fonts
-	BigFont = love.graphics.newFont("assets/KleeOne-SemiBold.ttf", 36)
-	RegularFont = love.graphics.newFont("assets/KleeOne-SemiBold.ttf", 24)
-	SmallFont = love.graphics.newFont("assets/KleeOne-SemiBold.ttf", 18)
+	BigFont = love.graphics.newFont("assets/fonts/KleeOne-SemiBold.ttf", 36)
+	RegularFont = love.graphics.newFont("assets/fonts/KleeOne-SemiBold.ttf", 24)
+	SmallFont = love.graphics.newFont("assets/fonts/KleeOne-SemiBold.ttf", 18)
 
 	-- global sounds
-	CatSound1 = love.audio.newSource("assets/cat-meow.mp3", "static")
-	CatSound2 = love.audio.newSource("assets/cat-purr-meow.mp3", "static")
-	CatSound3 = love.audio.newSource("assets/funny-meow.mp3", "static")
-	BackgroundMusic = love.audio.newSource("assets/background_music.mp3", "stream")
+	SoundCatMeow = love.audio.newSource("assets/sounds/cat-meow.mp3", "static")
+	SoundCatPurr = love.audio.newSource("assets/sounds/cat-purr-meow.mp3", "static")
+	SoundCatFunny = love.audio.newSource("assets/sounds/funny-meow.mp3", "static")
+	BackgroundMusic = love.audio.newSource("assets/sounds/background_music.mp3", "stream")
 	BackgroundMusic:setLooping(true)
 	BackgroundMusic:setVolume(0.4)
-	
+
 	love.audio.play(BackgroundMusic)
 
-	background = Sprite.new("/assets/background.png", config.dims * 12 / 7)
+	background = Sprite.new("/assets/images/background.png", config.dims * 12 / 7)
 	manager = Manager.new(Home)
 end
 

@@ -5,7 +5,7 @@ local utils  = require("lib.utils")
 local LockonEnemy = {}
 LockonEnemy.__index = LockonEnemy
 
-local sprite = Sprite.new("/assets/lockon.png", Point2d.rect(20, 20))
+local sprite = Sprite.new("/assets/images/lockon.png", Point2d.rect(20, 20))
 
 function LockonEnemy.new(data, game)
 	local e = setmetatable(data, LockonEnemy)
@@ -21,8 +21,8 @@ function LockonEnemy.new(data, game)
 	e.speed = 25
 	e.acceleration = 1
 
-	CatSound2:seek(0, "seconds")
-	love.audio.play(CatSound2)
+	SoundCatPurr:seek(0, "seconds")
+	love.audio.play(SoundCatPurr)
 
 	return e
 end

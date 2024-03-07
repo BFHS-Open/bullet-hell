@@ -5,7 +5,7 @@ local utils  = require("lib.utils")
 local StraightEnemy = {}
 StraightEnemy.__index = StraightEnemy
 
-local sprite = Sprite.new("/assets/straight.png", Point2d.rect(10, 10))
+local sprite = Sprite.new("/assets/images/straight.png", Point2d.rect(10, 10))
 
 function StraightEnemy.new(data, game)
 	local e = setmetatable(data, StraightEnemy)
@@ -18,8 +18,8 @@ function StraightEnemy.new(data, game)
 	e.radius = 5
 	e.speed = utils.random(30, 50)
 
-	CatSound3:seek(0, "seconds")
-	love.audio.play(CatSound3)
+	SoundCatFunny:seek(0, "seconds")
+	love.audio.play(SoundCatFunny)
 
 	return e
 end

@@ -28,7 +28,7 @@ local function randomSpawnPosition()
 	end
 end
 
-local warning = Sprite.new("/assets/warning.png", Point2d.rect(10, 10))
+local warning = Sprite.new("/assets/images/warning.png", Point2d.rect(10, 10))
 
 local Game = {}
 Game.__index = Game

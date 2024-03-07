@@ -5,7 +5,7 @@ local utils  = require("lib.utils")
 local HomingEnemy = {}
 HomingEnemy.__index = HomingEnemy
 
-local sprite = Sprite.new("/assets/homing.png", Point2d.rect(10, 10))
+local sprite = Sprite.new("/assets/images/homing.png", Point2d.rect(10, 10))
 
 function HomingEnemy.new(data, game)
 	local e = setmetatable(data, HomingEnemy)
@@ -20,8 +20,8 @@ function HomingEnemy.new(data, game)
 	e.speed = utils.random(10, 30)
 	e.angleSpeed = math.pi / 2 / (e.speed / 20)
 
-	CatSound1:seek(0, "seconds")
-	love.audio.play(CatSound1)
+	SoundCatMeow:seek(0, "seconds")
+	love.audio.play(SoundCatMeow)
 		
 	return e
 end
